@@ -62,6 +62,10 @@ coverage.xml
 .pytest_cache/
 .mypy_cache/
 
+# Backend
+backend/.venv/
+backend/__pycache__/
+
 # Misc
 *.log
 *.pid

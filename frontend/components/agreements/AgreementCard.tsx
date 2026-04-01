@@ -9,11 +9,11 @@ export function AgreementCard({ config }: AgreementCardProps) {
   return (
     <Link
       href={`/agreements/${config.slug}`}
-      className="group flex flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-slate-300 hover:shadow-md"
+      className="group flex flex-col rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:border-brand-blue/30 hover:shadow-md"
     >
-      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 transition-colors group-hover:bg-slate-200">
+      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-blue/10 transition-colors group-hover:bg-brand-blue/20">
         <svg
-          className="h-5 w-5 text-slate-600"
+          className="h-5 w-5 text-brand-blue"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
@@ -26,13 +26,13 @@ export function AgreementCard({ config }: AgreementCardProps) {
           />
         </svg>
       </div>
-      <h3 className="text-base font-semibold text-slate-900 group-hover:text-slate-700">
+      <h3 className="text-base font-semibold text-brand-navy group-hover:text-brand-blue">
         {config.name}
       </h3>
-      <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-500">
+      <p className="mt-2 flex-1 text-sm leading-relaxed text-brand-gray">
         {config.description}
       </p>
-      <div className="mt-4 flex items-center gap-1 text-sm font-medium text-slate-900 group-hover:text-slate-700">
+      <div className="mt-4 flex items-center gap-1 text-sm font-medium text-brand-navy group-hover:text-brand-blue">
         Create document
         <svg
           className="h-4 w-4 transition-transform group-hover:translate-x-0.5"

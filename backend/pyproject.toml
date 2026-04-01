@@ -1,0 +1,11 @@
+[project]
+name = "prelegal-backend"
+version = "0.1.0"
+description = "PreLegal backend API"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "sqlalchemy>=2.0",
+    "python-dotenv>=1.0",
+]

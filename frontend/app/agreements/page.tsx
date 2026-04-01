@@ -9,10 +9,10 @@ export default function AgreementsPage() {
     <AppShell>
       <div className="mx-auto w-full max-w-5xl px-6 py-12">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-3xl font-bold tracking-tight text-brand-navy">
             Legal Agreements
           </h1>
-          <p className="mt-2 text-lg text-slate-500">
+          <p className="mt-2 text-lg text-brand-gray">
             Select an agreement type to get started. Fill in your details and
             download a ready-to-sign document.
           </p>

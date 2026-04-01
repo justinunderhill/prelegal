@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { AppShell } from "@/components/layout/AppShell";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 // Mock Next.js Link
 jest.mock("next/link", () => {
@@ -20,9 +21,18 @@ jest.mock("next/link", () => {
   };
 });
 
+// Mock Next.js navigation
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({ push: jest.fn(), replace: jest.fn() }),
+}));
+
+function renderWithAuth(ui: React.ReactElement) {
+  return render(<AuthProvider>{ui}</AuthProvider>);
+}
+
 describe("AppShell", () => {
   it("renders the PreLegal branding", () => {
-    render(
+    renderWithAuth(
       <AppShell>
         <div>Content</div>
       </AppShell>
@@ -31,7 +41,7 @@ describe("AppShell", () => {
   });
 
   it("renders the Agreements navigation link", () => {
-    render(
+    renderWithAuth(
       <AppShell>
         <div>Content</div>
       </AppShell>
@@ -42,7 +52,7 @@ describe("AppShell", () => {
   });
 
   it("renders children content", () => {
-    render(
+    renderWithAuth(
       <AppShell>
         <div>Test child content</div>
       </AppShell>
@@ -51,7 +61,7 @@ describe("AppShell", () => {
   });
 
   it("has a home link on the logo", () => {
-    render(
+    renderWithAuth(
       <AppShell>
         <div>Content</div>
       </AppShell>
@@ -61,7 +71,7 @@ describe("AppShell", () => {
   });
 
   it("renders a header and main section", () => {
-    const { container } = render(
+    const { container } = renderWithAuth(
       <AppShell>
         <div>Content</div>
       </AppShell>
