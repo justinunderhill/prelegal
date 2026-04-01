@@ -1,6 +1,14 @@
 import { PartyValues } from "./types";
 
 /**
+ * Escape a string for safe use inside a markdown table cell.
+ * Replaces pipe characters and newlines that would break table structure.
+ */
+function escapeTableCell(value: string): string {
+  return value.replace(/\|/g, "\\|").replace(/\n/g, " ");
+}
+
+/**
  * Replace <span class="coverpage_link">Field Name</span> in standard terms
  * with the corresponding form values.
  */
@@ -92,16 +100,16 @@ export function substituteCoverPage(
     const p1 = party1 || { name: "", title: "", company: "", address: "" };
     const p2 = party2 || { name: "", title: "", company: "", address: "" };
 
-    // Replace the signature table
+    // Replace the signature table (escape values to prevent table breakage)
     const tableLines = [
       "|| PARTY 1 | PARTY 2 |",
       "|:--- | :----: | :----: |",
       `| Signature | ${p1.name ? "_______________" : ""} | ${p2.name ? "_______________" : ""} |`,
-      `| Print Name | ${p1.name} | ${p2.name} |`,
-      `| Title | ${p1.title} | ${p2.title} |`,
-      `| Company | ${p1.company} | ${p2.company} |`,
-      `| Notice Address | ${p1.address} | ${p2.address} |`,
-      `| Date | ${(values.effectiveDate as string) || ""} | ${(values.effectiveDate as string) || ""} |`,
+      `| Print Name | ${escapeTableCell(p1.name)} | ${escapeTableCell(p2.name)} |`,
+      `| Title | ${escapeTableCell(p1.title)} | ${escapeTableCell(p2.title)} |`,
+      `| Company | ${escapeTableCell(p1.company)} | ${escapeTableCell(p2.company)} |`,
+      `| Notice Address | ${escapeTableCell(p1.address)} | ${escapeTableCell(p2.address)} |`,
+      `| Date | ${escapeTableCell((values.effectiveDate as string) || "")} | ${escapeTableCell((values.effectiveDate as string) || "")} |`,
     ];
 
     result = result.replace(

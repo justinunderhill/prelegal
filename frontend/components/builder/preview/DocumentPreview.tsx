@@ -1,9 +1,22 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import { renderFullDocument } from "@/lib/templates/engine";
+
+// Extend default sanitization schema to allow <span class="coverpage_link">
+// which is used in the standard terms template, while blocking all other
+// potentially dangerous HTML from user input.
+const sanitizeSchema = {
+  ...defaultSchema,
+  attributes: {
+    ...defaultSchema.attributes,
+    span: [...(defaultSchema.attributes?.span || []), "className"],
+  },
+  tagNames: [...(defaultSchema.tagNames || []), "span", "label"],
+};
 
 interface DocumentPreviewProps {
   coverTemplate: string;
@@ -31,33 +44,9 @@ export function DocumentPreview({
 
   return (
     <div className="prose prose-slate prose-sm max-w-none">
-      <ReactMarkdown rehypePlugins={[rehypeRaw]}>{rendered}</ReactMarkdown>
+      <ReactMarkdown rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}>
+        {rendered}
+      </ReactMarkdown>
     </div>
   );
-}
-
-/**
- * Hook to fetch template markdown files.
- * Returns [coverTemplate, termsTemplate] strings, empty until loaded.
- */
-export function useTemplates(coverUrl: string, termsUrl: string) {
-  const [cover, setCover] = useState("");
-  const [terms, setTerms] = useState("");
-
-  useEffect(() => {
-    let cancelled = false;
-    Promise.all([
-      fetch(coverUrl).then((r) => r.text()),
-      fetch(termsUrl).then((r) => r.text()),
-    ]).then(([c, t]) => {
-      if (cancelled) return;
-      setCover(c);
-      setTerms(t);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [coverUrl, termsUrl]);
-
-  return { coverTemplate: cover, termsTemplate: terms };
 }

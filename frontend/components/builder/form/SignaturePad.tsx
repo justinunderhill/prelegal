@@ -31,7 +31,7 @@ export function SignaturePad({ label, value, onChange }: SignaturePadProps) {
           <div className="relative">
             <img
               src={value}
-              alt="Signature"
+              alt={`${label} preview`}
               className="h-[120px] w-full object-contain"
             />
             <button
@@ -39,7 +39,7 @@ export function SignaturePad({ label, value, onChange }: SignaturePadProps) {
               onClick={handleClear}
               className="absolute right-2 top-2 rounded-md bg-white/80 px-2 py-1 text-xs font-medium text-slate-600 shadow-sm ring-1 ring-slate-200 transition-colors hover:bg-white hover:text-red-600"
             >
-              Clear
+              Clear signature
             </button>
           </div>
         ) : (
@@ -48,6 +48,8 @@ export function SignaturePad({ label, value, onChange }: SignaturePadProps) {
               ref={sigRef}
               canvasProps={{
                 className: "w-full h-[120px] cursor-crosshair",
+                "aria-label": `${label} drawing area`,
+                role: "img",
               }}
               penColor="#1e293b"
               minWidth={1.5}
@@ -62,7 +64,7 @@ export function SignaturePad({ label, value, onChange }: SignaturePadProps) {
               onClick={handleClear}
               className="absolute right-2 top-2 rounded-md bg-white/80 px-2 py-1 text-xs font-medium text-slate-600 shadow-sm ring-1 ring-slate-200 transition-colors hover:bg-white hover:text-red-600"
             >
-              Clear
+              Clear signature
             </button>
           </div>
         )}

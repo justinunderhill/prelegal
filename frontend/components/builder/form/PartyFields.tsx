@@ -12,6 +12,9 @@ interface PartyFieldsProps {
   errors?: Record<string, { message?: string }>;
 }
 
+const inputStyles =
+  "w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500";
+
 export function PartyFields({
   partyKey,
   label,
@@ -28,60 +31,84 @@ export function PartyFields({
 
       <div className="grid gap-3 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-sm font-medium text-slate-700">
+          <label
+            htmlFor={`${partyKey}-name`}
+            className="mb-1 block text-sm font-medium text-slate-700"
+          >
             Full Name
           </label>
           <input
+            id={`${partyKey}-name`}
             {...register(`${partyKey}.name`)}
             placeholder="John Smith"
-            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+            aria-invalid={errors?.name ? "true" : undefined}
+            className={inputStyles}
           />
           {errors?.name && (
-            <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>
+            <p role="alert" className="mt-1 text-xs text-red-600">{errors.name.message}</p>
           )}
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-slate-700">Title</label>
+          <label
+            htmlFor={`${partyKey}-title`}
+            className="mb-1 block text-sm font-medium text-slate-700"
+          >
+            Title
+          </label>
           <input
+            id={`${partyKey}-title`}
             {...register(`${partyKey}.title`)}
             placeholder="CEO"
-            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+            aria-invalid={errors?.title ? "true" : undefined}
+            className={inputStyles}
           />
           {errors?.title && (
-            <p className="mt-1 text-xs text-red-600">{errors.title.message}</p>
+            <p role="alert" className="mt-1 text-xs text-red-600">{errors.title.message}</p>
           )}
         </div>
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium text-slate-700">Company</label>
+        <label
+          htmlFor={`${partyKey}-company`}
+          className="mb-1 block text-sm font-medium text-slate-700"
+        >
+          Company
+        </label>
         <input
+          id={`${partyKey}-company`}
           {...register(`${partyKey}.company`)}
           placeholder="Acme Corp"
-          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+          aria-invalid={errors?.company ? "true" : undefined}
+          className={inputStyles}
         />
         {errors?.company && (
-          <p className="mt-1 text-xs text-red-600">{errors.company.message}</p>
+          <p role="alert" className="mt-1 text-xs text-red-600">{errors.company.message}</p>
         )}
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium text-slate-700">
+        <label
+          htmlFor={`${partyKey}-address`}
+          className="mb-1 block text-sm font-medium text-slate-700"
+        >
           Notice Address
         </label>
         <input
+          id={`${partyKey}-address`}
           {...register(`${partyKey}.address`)}
           placeholder="email@company.com or postal address"
-          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+          aria-invalid={errors?.address ? "true" : undefined}
+          className={inputStyles}
         />
         {errors?.address && (
-          <p className="mt-1 text-xs text-red-600">{errors.address.message}</p>
+          <p role="alert" className="mt-1 text-xs text-red-600">{errors.address.message}</p>
         )}
       </div>
 
       <SignaturePad
-        label="Signature"
+        label={`${label} Signature`}
         value={signatureValue}
         onChange={(dataUrl) => setValue(`${partyKey}.signature`, dataUrl)}
       />
