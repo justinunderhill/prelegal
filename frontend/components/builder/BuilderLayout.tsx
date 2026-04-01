@@ -46,10 +46,10 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
   return (
     <div className="flex flex-1 overflow-hidden">
       {/* Left: Form */}
-      <div className="w-1/2 overflow-y-auto border-r border-slate-200 bg-white" role="region" aria-label="Agreement form">
-        <div className="sticky top-0 z-10 border-b border-slate-200 bg-white/95 px-6 py-4 backdrop-blur-sm">
-          <h2 className="text-lg font-semibold text-slate-900">{config.name}</h2>
-          <p className="mt-1 text-sm text-slate-500">
+      <div className="w-1/2 overflow-y-auto border-r border-gray-200 bg-white" role="region" aria-label="Agreement form">
+        <div className="sticky top-0 z-10 border-b border-gray-200 bg-white/95 px-6 py-4 backdrop-blur-sm">
+          <h2 className="text-lg font-semibold text-brand-navy">{config.name}</h2>
+          <p className="mt-1 text-sm text-brand-gray">
             Fill in the fields below to generate your agreement.
           </p>
         </div>
@@ -65,18 +65,18 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
       </div>
 
       {/* Right: Preview */}
-      <div className="flex w-1/2 flex-col bg-slate-50" role="region" aria-label="Document preview">
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/95 px-6 py-4 backdrop-blur-sm">
+      <div className="flex w-1/2 flex-col bg-gray-50" role="region" aria-label="Document preview">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white/95 px-6 py-4 backdrop-blur-sm">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">Preview</h2>
-            <p className="mt-1 text-sm text-slate-500">
+            <h2 className="text-lg font-semibold text-brand-navy">Preview</h2>
+            <p className="mt-1 text-sm text-brand-gray">
               Live preview of your document
             </p>
           </div>
           <button
             onClick={handleDownload}
             disabled={downloading || !templatesLoaded}
-            className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-purple px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-purple/90 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {downloading ? (
               <>
@@ -122,14 +122,14 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
           </button>
         </div>
         <div className="flex-1 overflow-y-auto p-6">
-          <div className="mx-auto max-w-2xl rounded-lg border border-slate-200 bg-white p-8 shadow-sm">
+          <div className="mx-auto max-w-2xl rounded-lg border border-gray-200 bg-white p-8 shadow-sm">
             {templateError ? (
               <div className="flex h-64 flex-col items-center justify-center gap-2 text-center">
                 <svg className="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
                 </svg>
                 <p className="text-sm font-medium text-red-600">Failed to load document templates</p>
-                <p className="text-xs text-slate-500">{templateError}</p>
+                <p className="text-xs text-brand-gray">{templateError}</p>
               </div>
             ) : (
               <DocumentPreview

@@ -1,12 +1,24 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const { user, signOut } = useAuth();
+  const router = useRouter();
+
+  function handleSignOut() {
+    signOut();
+    router.push("/login");
+  }
+
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
+    <div className="flex min-h-screen flex-col bg-white">
+      <header className="border-b border-gray-200 bg-white">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-navy">
               <svg
                 className="h-4 w-4 text-white"
                 fill="none"
@@ -21,15 +33,26 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 />
               </svg>
             </div>
-            <span className="text-lg font-semibold text-slate-900">PreLegal</span>
+            <span className="text-lg font-semibold text-brand-navy">PreLegal</span>
           </Link>
           <nav className="flex items-center gap-6">
             <Link
               href="/agreements"
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-900"
+              className="text-sm font-medium text-brand-gray transition-colors hover:text-brand-navy"
             >
               Agreements
             </Link>
+            {user && (
+              <>
+                <span className="text-sm text-brand-gray">{user.email}</span>
+                <button
+                  onClick={handleSignOut}
+                  className="text-sm font-medium text-brand-gray transition-colors hover:text-brand-navy"
+                >
+                  Sign Out
+                </button>
+              </>
+            )}
           </nav>
         </div>
       </header>

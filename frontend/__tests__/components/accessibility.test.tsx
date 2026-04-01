@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { useForm } from "react-hook-form";
 import { DynamicForm } from "@/components/builder/form/DynamicForm";
 import { AppShell } from "@/components/layout/AppShell";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { FieldDef } from "@/lib/templates/types";
 
 // Mock Next.js Link
@@ -22,6 +23,11 @@ jest.mock("next/link", () => {
     );
   };
 });
+
+// Mock Next.js navigation
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({ push: jest.fn(), replace: jest.fn() }),
+}));
 
 // Mock SignaturePad
 jest.mock("@/components/builder/form/SignaturePad", () => ({
@@ -215,27 +221,33 @@ describe("Accessibility", () => {
   describe("AppShell navigation", () => {
     it("has a header element for navigation landmark", () => {
       render(
-        <AppShell>
-          <div>Content</div>
-        </AppShell>
+        <AuthProvider>
+          <AppShell>
+            <div>Content</div>
+          </AppShell>
+        </AuthProvider>
       );
       expect(document.querySelector("header")).toBeTruthy();
     });
 
     it("has a main element for content landmark", () => {
       render(
-        <AppShell>
-          <div>Content</div>
-        </AppShell>
+        <AuthProvider>
+          <AppShell>
+            <div>Content</div>
+          </AppShell>
+        </AuthProvider>
       );
       expect(document.querySelector("main")).toBeTruthy();
     });
 
     it("has a nav element for navigation", () => {
       render(
-        <AppShell>
-          <div>Content</div>
-        </AppShell>
+        <AuthProvider>
+          <AppShell>
+            <div>Content</div>
+          </AppShell>
+        </AuthProvider>
       );
       expect(document.querySelector("nav")).toBeTruthy();
     });

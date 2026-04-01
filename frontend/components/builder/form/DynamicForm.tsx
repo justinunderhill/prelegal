@@ -24,7 +24,7 @@ function groupFields(fields: FieldDef[]): Map<string, FieldDef[]> {
 }
 
 const inputStyles =
-  "w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500";
+  "w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-blue focus:outline-none focus:ring-1 focus:ring-brand-blue";
 
 function FieldRenderer({
   field,
@@ -48,7 +48,7 @@ function FieldRenderer({
         <div>
           <label
             htmlFor={fieldId}
-            className="mb-1 block text-sm font-medium text-slate-700"
+            className="mb-1 block text-sm font-medium text-gray-700"
           >
             {field.label}
           </label>
@@ -73,7 +73,7 @@ function FieldRenderer({
         <div>
           <label
             htmlFor={fieldId}
-            className="mb-1 block text-sm font-medium text-slate-700"
+            className="mb-1 block text-sm font-medium text-gray-700"
           >
             {field.label}
           </label>
@@ -99,7 +99,7 @@ function FieldRenderer({
         <div>
           <label
             htmlFor={fieldId}
-            className="mb-1 block text-sm font-medium text-slate-700"
+            className="mb-1 block text-sm font-medium text-gray-700"
           >
             {field.label}
           </label>
@@ -122,22 +122,22 @@ function FieldRenderer({
     case "radio":
       return (
         <fieldset>
-          <legend className="mb-2 block text-sm font-medium text-slate-700">
+          <legend className="mb-2 block text-sm font-medium text-gray-700">
             {field.label}
           </legend>
           <div className="space-y-2" role="radiogroup" aria-label={field.label}>
             {field.options?.map((option) => (
               <label
                 key={option.value}
-                className="flex cursor-pointer items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2.5 text-sm transition-colors hover:bg-slate-50 has-[:checked]:border-slate-400 has-[:checked]:bg-slate-50"
+                className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2.5 text-sm transition-colors hover:bg-gray-50 has-[:checked]:border-brand-blue has-[:checked]:bg-brand-blue/5"
               >
                 <input
                   type="radio"
                   {...register(field.key)}
                   value={option.value}
-                  className="text-slate-900 focus:ring-slate-500"
+                  className="text-brand-blue focus:ring-brand-blue"
                 />
-                <span className="text-slate-700">{option.label}</span>
+                <span className="text-gray-700">{option.label}</span>
               </label>
             ))}
           </div>
@@ -174,7 +174,7 @@ export function DynamicForm({
     <div className="space-y-8" role="form" aria-label="Agreement form">
       {Array.from(groups.entries()).map(([groupName, groupFields]) => (
         <section key={groupName} aria-label={groupName}>
-          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-500">
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-brand-gray">
             {groupName}
           </h3>
           <div className="space-y-4">
