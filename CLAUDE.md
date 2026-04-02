@@ -8,7 +8,7 @@ The available documents are covered in the catalog.json file in the project root
 
 @catalog.json
 
-The current implementation supports all 11 document types via AI chat with full user authentication and document persistence.
+The current implementation has a Mutual NDA form builder with live preview and PDF download, served via a FastAPI backend in Docker with a fake login screen.
 
 ## Development process
 
@@ -56,23 +56,29 @@ Backend available at http://localhost:8000
 
 ## Implementation Status
 
+### Completed (PL-2)
+- CommonPaper legal document templates added to templates/ directory
+
 ### Completed (PL-4)
-- Docker multi-stage build (Node frontend + Python backend)
-- FastAPI backend with SQLite (fresh DB each container start)
-- Next.js static export served by FastAPI at localhost:8000
-- Auth routes: POST /api/auth/signup, POST /api/auth/signin, POST /api/auth/signout, GET /api/auth/me
-- Start/stop scripts for Mac, Linux, Windows
-- Mutual NDA form with live preview and PDF download
+- Next.js 16 frontend with App Router, Tailwind CSS v4, TypeScript
+- Mutual NDA form builder with live preview and PDF download
+- Dynamic form rendering, signature pad, template engine
+- Agreement config/registry pattern (`lib/agreements/`)
 
 ### Completed (PL-5)
-- Docker multi-stage build (Node frontend + Python backend)
-- FastAPI backend with SQLite connection (fresh DB each container start)
-- Next.js static export served by FastAPI at localhost:8000
-- Fake login screen (accepts any credentials, localStorage-based auth context)
-- AuthProvider wrapping the app, useAuth hook for sign in/out
-- Brand colors applied across all components (#ecad0a, #209dd7, #753991, #032147, #888888)
+- FastAPI backend (`backend/`) with SQLite connection and health endpoint
+- Docker multi-stage build (Node builds static export, Python serves it)
+- Next.js static export (`output: 'export'`, `trailingSlash: true`) served by FastAPI at localhost:8000
+- Fake login screen (accepts any credentials, localStorage-based AuthContext/useAuth)
+- Brand colors applied across all components via Tailwind CSS v4 theme tokens
 - Start/stop scripts for Mac, Linux, Windows
-- Health check endpoint: GET /api/health
+- `.dockerignore` to prevent secrets in Docker images
 
 ### Current API Endpoints
 - `GET /api/health` - Health check
+
+### Architecture Notes
+- Frontend builds to `frontend/out/` via `next build`, served by FastAPI `StaticFiles(html=True)`
+- `trailingSlash: true` required so Next.js generates `dir/index.html` files compatible with StaticFiles
+- Auth uses `lib/auth/client.ts` abstraction — swap to real API calls when implementing real auth
+- API routers must be registered before the StaticFiles mount in `backend/app/main.py`
