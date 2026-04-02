@@ -4,8 +4,11 @@ import { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AgreementConfig } from "@/lib/templates/types";
+import { BuilderMode } from "@/lib/chat/types";
 import { DynamicForm } from "./form/DynamicForm";
 import { DocumentPreview } from "./preview/DocumentPreview";
+import { ModeToggle } from "./ModeToggle";
+import { ChatPanel } from "./chat/ChatPanel";
 import { useTemplates } from "@/lib/hooks/useTemplates";
 import { generateAndDownloadPdf } from "@/lib/pdf/generatePdf";
 
@@ -14,9 +17,12 @@ interface BuilderLayoutProps {
 }
 
 export function BuilderLayout({ config }: BuilderLayoutProps) {
+  const [mode, setMode] = useState<BuilderMode>("chat");
+
   const {
     register,
     setValue,
+    getValues,
     watch,
     formState: { errors },
   } = useForm({
@@ -43,25 +49,51 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
     }
   }, [config, values, termsTemplate]);
 
+  const handleFieldsExtracted = useCallback(
+    (fields: Record<string, unknown>) => {
+      for (const [key, value] of Object.entries(fields)) {
+        if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+          // Deep merge for nested objects (party1, party2)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const currentVal = getValues(key as any) as Record<string, unknown> | undefined;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          setValue(key as any, { ...currentVal, ...value });
+        } else {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          setValue(key as any, value);
+        }
+      }
+    },
+    [setValue, getValues]
+  );
+
   return (
     <div className="flex flex-1 overflow-hidden">
-      {/* Left: Form */}
-      <div className="w-1/2 overflow-y-auto border-r border-gray-200 bg-white" role="region" aria-label="Agreement form">
-        <div className="sticky top-0 z-10 border-b border-gray-200 bg-white/95 px-6 py-4 backdrop-blur-sm">
+      {/* Left: Chat or Form */}
+      <div className="flex w-1/2 flex-col overflow-hidden border-r border-gray-200 bg-white" role="region" aria-label={mode === "chat" ? "AI Chat" : "Agreement form"}>
+        <div className="sticky top-0 z-10 border-b border-gray-200 bg-white/95 px-6 py-4 backdrop-blur-sm space-y-3">
           <h2 className="text-lg font-semibold text-brand-navy">{config.name}</h2>
-          <p className="mt-1 text-sm text-brand-gray">
-            Fill in the fields below to generate your agreement.
-          </p>
+          <ModeToggle mode={mode} onChange={setMode} />
         </div>
-        <div className="px-6 py-6">
-          <DynamicForm
-            fields={config.fields}
-            register={register}
-            setValue={setValue}
-            watch={watch}
-            errors={errors}
+
+        {mode === "form" ? (
+          <div className="flex-1 overflow-y-auto px-6 py-6">
+            <DynamicForm
+              fields={config.fields}
+              register={register}
+              setValue={setValue}
+              watch={watch}
+              errors={errors}
+            />
+          </div>
+        ) : (
+          <ChatPanel
+            slug={config.slug}
+            agreementName={config.name}
+            onFieldsExtracted={handleFieldsExtracted}
+            onSwitchToForm={() => setMode("form")}
           />
-        </div>
+        )}
       </div>
 
       {/* Right: Preview */}

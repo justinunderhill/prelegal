@@ -8,7 +8,7 @@ The available documents are covered in the catalog.json file in the project root
 
 @catalog.json
 
-The current implementation has a Mutual NDA form builder with live preview and PDF download, served via a FastAPI backend in Docker with a fake login screen.
+The current implementation has a Mutual NDA builder with AI chat and manual form modes, live preview, and PDF download, served via a FastAPI backend in Docker with a fake login screen.
 
 ## Development process
 
@@ -74,11 +74,22 @@ Backend available at http://localhost:8000
 - Start/stop scripts for Mac, Linux, Windows
 - `.dockerignore` to prevent secrets in Docker images
 
+### Completed (PL-6)
+- AI chat mode for Mutual NDA: freeform conversation to populate NDA fields
+- Mode toggle (AI Chat / Manual Form) in BuilderLayout — both modes share same form state
+- `POST /api/chat` endpoint using OpenAI SDK with Structured Outputs (model: `openai/gpt-5.3-codex`)
+- Backend service layer with agreement registry (`backend/app/agreements/`) for extensibility
+- Live document preview updates as AI extracts field values from conversation
+- Chat is ephemeral (no DB persistence), API key stays server-side
+- Signatures remain in manual form mode
+
 ### Current API Endpoints
 - `GET /api/health` - Health check
+- `POST /api/chat` - AI chat for agreement field extraction
 
 ### Architecture Notes
 - Frontend builds to `frontend/out/` via `next build`, served by FastAPI `StaticFiles(html=True)`
 - `trailingSlash: true` required so Next.js generates `dir/index.html` files compatible with StaticFiles
 - Auth uses `lib/auth/client.ts` abstraction — swap to real API calls when implementing real auth
 - API routers must be registered before the StaticFiles mount in `backend/app/main.py`
+- Chat uses flat party field names on backend (`party1_name`), nested on frontend (`party1.name`) — `useChatSession` hook handles the mapping

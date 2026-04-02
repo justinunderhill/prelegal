@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from app.database import init_db
-from app.routers import health
+from app.routers import chat, health
 
 load_dotenv()
 
@@ -23,6 +23,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="PreLegal API", lifespan=lifespan)
 
 app.include_router(health.router)
+app.include_router(chat.router)
 
 if Path(STATIC_DIR).is_dir():
     app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")
