@@ -15,8 +15,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      <header className="border-b border-gray-200 bg-white">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+      <header className="sticky top-0 z-30 border-b border-gray-200 bg-white">
+        <div className="mx-auto flex h-14 items-center justify-between px-4 sm:h-16 sm:max-w-7xl sm:px-6">
           <Link href="/" className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-navy">
               <svg
@@ -35,7 +35,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
             <span className="text-lg font-semibold text-brand-navy">PreLegal</span>
           </Link>
-          <nav className="flex items-center gap-6">
+          <nav className="flex items-center gap-3 sm:gap-6">
             <Link
               href="/agreements"
               className="text-sm font-medium text-brand-gray transition-colors hover:text-brand-navy"
@@ -44,7 +44,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </Link>
             {user && (
               <>
-                <span className="text-sm text-brand-gray">{user.email}</span>
+                <span className="hidden text-sm text-brand-gray sm:inline">{user.email}</span>
                 <button
                   onClick={handleSignOut}
                   className="text-sm font-medium text-brand-gray transition-colors hover:text-brand-navy"
@@ -56,7 +56,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
       </header>
-      <main className="flex flex-1 flex-col">{children}</main>
+      <main className="flex-1">{children}</main>
     </div>
   );
 }
