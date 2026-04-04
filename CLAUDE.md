@@ -20,7 +20,7 @@ When instructed to build a feature:
 
 ## AI design
 
-When writing code to make calls to LLMs, use your Cerebras skill to use LiteLLM via OpenAI to the `openai/gpt-5.3-codex` model. You should use Structured Outputs so that you can interpret the results and populate fields in the legal document.
+When writing code to make calls to LLMs, use the OpenAI SDK with the `gpt-4.1` model (chat-capable, supports Structured Outputs). You should use Structured Outputs so that you can interpret the results and populate fields in the legal document.
 
 There is an OPENAI_API_KEY in the .env file in the project root.
 
@@ -77,7 +77,7 @@ Backend available at http://localhost:8000
 ### Completed (PL-6)
 - AI chat mode for Mutual NDA: freeform conversation to populate NDA fields
 - Chat-only UI (no manual form mode toggle) with side-by-side chat + live document preview
-- `POST /api/chat` endpoint using OpenAI SDK with Structured Outputs (model: `gpt-5.3-codex`)
+- `POST /api/chat` endpoint using OpenAI SDK with Structured Outputs (model: `gpt-4.1`)
 - Backend service layer with agreement registry (`backend/app/agreements/`) for extensibility
 - Live document preview updates as AI extracts field values from conversation
 - Chat is ephemeral (no DB persistence), API key stays server-side
