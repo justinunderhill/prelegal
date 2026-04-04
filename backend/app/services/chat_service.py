@@ -81,7 +81,7 @@ def process_turn(request: ChatRequest) -> ChatResponse:
     response_schema = _build_llm_response_schema(config.fields_schema)
 
     completion = client.chat.completions.create(
-        model="gpt-5.3-codex",
+        model="gpt-4.1",
         messages=messages,
         response_format={
             "type": "json_schema",
