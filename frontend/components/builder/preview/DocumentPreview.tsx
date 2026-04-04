@@ -6,7 +6,7 @@ import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import { renderFullDocument } from "@/lib/templates/engine";
 
-// Extend default sanitization schema to allow <span class="coverpage_link">
+// Extend default sanitization schema to allow <span class="...">
 // which is used in the standard terms template, while blocking all other
 // potentially dangerous HTML from user input.
 const sanitizeSchema = {
@@ -19,20 +19,20 @@ const sanitizeSchema = {
 };
 
 interface DocumentPreviewProps {
-  coverTemplate: string;
+  coverMarkdown: string;
   termsTemplate: string;
-  values: Record<string, unknown>;
+  fieldMap: Record<string, string>;
 }
 
 export function DocumentPreview({
-  coverTemplate,
+  coverMarkdown,
   termsTemplate,
-  values,
+  fieldMap,
 }: DocumentPreviewProps) {
   const rendered = useMemo(() => {
-    if (!coverTemplate || !termsTemplate) return "";
-    return renderFullDocument(coverTemplate, termsTemplate, values);
-  }, [coverTemplate, termsTemplate, values]);
+    if (!termsTemplate) return "";
+    return renderFullDocument(coverMarkdown, termsTemplate, fieldMap);
+  }, [coverMarkdown, termsTemplate, fieldMap]);
 
   if (!rendered) {
     return (

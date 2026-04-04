@@ -10,7 +10,7 @@ import {
   pdf,
   Font,
 } from "@react-pdf/renderer";
-import { buildFieldMap, substituteSpanLinks } from "../templates/engine";
+import { substituteSpanLinks } from "../templates/engine";
 import { AgreementConfig, PartyValues } from "../templates/types";
 
 Font.register({
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function CoverPagePdf({ values }: { values: Record<string, unknown> }) {
+function MutualNdaCoverPagePdf({ values }: { values: Record<string, unknown> }) {
   const party1 = values.party1 as PartyValues;
   const party2 = values.party2 as PartyValues;
 
@@ -200,7 +200,49 @@ function CoverPagePdf({ values }: { values: Record<string, unknown> }) {
   );
 }
 
-function StandardTermsPdf({ terms }: { terms: string }) {
+function GenericCoverPagePdf({
+  config,
+  values,
+}: {
+  config: AgreementConfig;
+  values: Record<string, unknown>;
+}) {
+  const nonPartyFields = config.fields.filter(
+    (f) => f.type !== "party" && f.type !== "signature"
+  );
+
+  return (
+    <Page size="LETTER" style={styles.page}>
+      <Text style={styles.title}>{config.name}</Text>
+      <Text style={styles.paragraph}>Cover Page</Text>
+
+      <View style={styles.divider} />
+
+      {nonPartyFields.map((field) => {
+        const value = values[field.key];
+        const display = value != null && value !== "" ? String(value) : "—";
+        return (
+          <View key={field.key}>
+            <Text style={styles.label}>{field.label}</Text>
+            <Text style={styles.fieldValue}>{display}</Text>
+          </View>
+        );
+      })}
+
+      <Text style={styles.footer}>
+        Common Paper {config.name} — CC BY 4.0
+      </Text>
+    </Page>
+  );
+}
+
+function StandardTermsPdf({
+  terms,
+  footerText,
+}: {
+  terms: string;
+  footerText: string;
+}) {
   // Parse markdown sections into simple text blocks
   const lines = terms.split("\n").filter((l) => l.trim());
   const blocks: { type: "heading" | "paragraph"; text: string }[] = [];
@@ -231,14 +273,12 @@ function StandardTermsPdf({ terms }: { terms: string }) {
           </Text>
         )
       )}
-      <Text style={styles.footer}>
-        Common Paper Mutual Non-Disclosure Agreement (Version 1.0) — CC BY 4.0
-      </Text>
+      <Text style={styles.footer}>{footerText}</Text>
     </Page>
   );
 }
 
-function NdaDocument({
+function AgreementDocument({
   config,
   values,
   termsMarkdown,
@@ -247,10 +287,16 @@ function NdaDocument({
   values: Record<string, unknown>;
   termsMarkdown: string;
 }) {
+  const footerText = `Common Paper ${config.name} — CC BY 4.0`;
+
   return (
     <Document>
-      <CoverPagePdf values={values} />
-      <StandardTermsPdf terms={termsMarkdown} />
+      {config.slug === "mutual-nda" ? (
+        <MutualNdaCoverPagePdf values={values} />
+      ) : (
+        <GenericCoverPagePdf config={config} values={values} />
+      )}
+      <StandardTermsPdf terms={termsMarkdown} footerText={footerText} />
     </Document>
   );
 }
@@ -260,12 +306,12 @@ export async function generateAndDownloadPdf(
   values: Record<string, unknown>,
   termsMarkdown: string
 ) {
-  // Substitute values into the terms for the PDF
-  const fieldMap = buildFieldMap(values);
+  // Use the config's own buildFieldMap for substitution
+  const fieldMap = config.buildFieldMap(values);
   const processedTerms = substituteSpanLinks(termsMarkdown, fieldMap);
 
   const blob = await pdf(
-    <NdaDocument
+    <AgreementDocument
       config={config}
       values={values}
       termsMarkdown={processedTerms}
@@ -275,7 +321,7 @@ export async function generateAndDownloadPdf(
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `${config.slug}-${(values.effectiveDate as string) || "draft"}.pdf`;
+  link.download = `${config.slug}-draft.pdf`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { AgreementConfig, FieldDef } from "../templates/types";
+import { substituteMutualNdaCoverPage, buildMutualNdaFieldMap } from "../templates/engine";
 
 const partySchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -125,6 +126,11 @@ export const mutualNdaConfig: AgreementConfig = {
   termsTemplate: "/templates/Mutual-NDA.md",
   fields,
   schema: mutualNdaSchema,
+  buildFieldMap: buildMutualNdaFieldMap,
+  generateCoverPage: (values, rawTemplate) => {
+    if (!rawTemplate) return "";
+    return substituteMutualNdaCoverPage(rawTemplate, values);
+  },
   defaultValues: {
     purpose:
       "Evaluating whether to enter into a business relationship with the other party.",

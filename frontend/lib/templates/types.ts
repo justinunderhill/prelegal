@@ -36,9 +36,12 @@ export interface AgreementConfig {
   slug: string;
   name: string;
   description: string;
-  coverTemplate: string;
+  coverTemplate: string | null;
   termsTemplate: string;
   fields: FieldDef[];
   schema: z.ZodType;
   defaultValues: Record<string, unknown>;
+  buildFieldMap: (values: Record<string, unknown>) => Record<string, string>;
+  /** Generate cover page markdown. rawTemplate is the fetched cover template (if coverTemplate URL is set). */
+  generateCoverPage?: (values: Record<string, unknown>, rawTemplate?: string) => string;
 }

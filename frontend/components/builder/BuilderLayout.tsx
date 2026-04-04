@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AgreementConfig } from "@/lib/templates/types";
@@ -32,7 +32,20 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
     config.coverTemplate,
     config.termsTemplate
   );
-  const templatesLoaded = Boolean(coverTemplate && termsTemplate);
+  const templatesLoaded = Boolean(
+    (config.coverTemplate ? coverTemplate : true) && termsTemplate
+  );
+
+  // Build cover markdown: use fetched template for NDA, or generate for others
+  const coverMarkdown = useMemo(() => {
+    if (config.generateCoverPage) {
+      return config.generateCoverPage(values, coverTemplate || undefined);
+    }
+    return coverTemplate || "";
+  }, [config, coverTemplate, values]);
+
+  // Build the field map for span substitution
+  const fieldMap = useMemo(() => config.buildFieldMap(values), [config, values]);
 
   const handleDownload = useCallback(async () => {
     setDownloading(true);
@@ -133,9 +146,9 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
               </div>
             ) : (
               <DocumentPreview
-                coverTemplate={coverTemplate}
+                coverMarkdown={coverMarkdown}
                 termsTemplate={termsTemplate}
-                values={values}
+                fieldMap={fieldMap}
               />
             )}
           </div>

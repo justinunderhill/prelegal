@@ -9,17 +9,19 @@ function escapeTableCell(value: string): string {
 }
 
 /**
- * Replace <span class="coverpage_link">Field Name</span> in standard terms
- * with the corresponding form values.
+ * Replace <span class="coverpage_link|keyterms_link|orderform_link|businessterms_link|sow_link">Field Name</span>
+ * in standard terms with the corresponding form values.
+ * Handles possessive forms (e.g., "Customer's") by stripping trailing 's for lookup.
  */
 export function substituteSpanLinks(
   markdown: string,
   fieldMap: Record<string, string>
 ): string {
   return markdown.replace(
-    /<span class="coverpage_link">([^<]+)<\/span>/g,
+    /<span[^>]*class="(?:coverpage_link|keyterms_link|orderform_link|businessterms_link|sow_link)"[^>]*>([^<]+)<\/span>/g,
     (_, fieldName: string) => {
-      const value = fieldMap[fieldName];
+      const normalized = fieldName.replace(/'s$/, "");
+      const value = fieldMap[fieldName] ?? fieldMap[normalized];
       return value || `[${fieldName}]`;
     }
   );
@@ -27,8 +29,9 @@ export function substituteSpanLinks(
 
 /**
  * Build the cover page by replacing placeholder values and toggling checkboxes.
+ * This is specific to the Mutual NDA cover page template.
  */
-export function substituteCoverPage(
+export function substituteMutualNdaCoverPage(
   markdown: string,
   values: Record<string, unknown>
 ): string {
@@ -122,9 +125,9 @@ export function substituteCoverPage(
 }
 
 /**
- * Build the field map for span link substitution from form values.
+ * Build the Mutual NDA field map for span link substitution.
  */
-export function buildFieldMap(values: Record<string, unknown>): Record<string, string> {
+export function buildMutualNdaFieldMap(values: Record<string, unknown>): Record<string, string> {
   const mndaTermType = values.mndaTermType as string;
   const mndaTermYears = values.mndaTermYears as string;
   const confType = values.confidentialityType as string;
@@ -158,12 +161,10 @@ export function buildFieldMap(values: Record<string, unknown>): Record<string, s
  * Render the full document by combining cover page and standard terms.
  */
 export function renderFullDocument(
-  coverTemplate: string,
+  coverMarkdown: string,
   termsTemplate: string,
-  values: Record<string, unknown>
+  fieldMap: Record<string, string>
 ): string {
-  const fieldMap = buildFieldMap(values);
-  const cover = substituteCoverPage(coverTemplate, values);
   const terms = substituteSpanLinks(termsTemplate, fieldMap);
-  return `${cover}\n\n---\n\n${terms}`;
+  return `${coverMarkdown}\n\n---\n\n${terms}`;
 }

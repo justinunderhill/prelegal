@@ -1,7 +1,7 @@
 import {
   substituteSpanLinks,
-  substituteCoverPage,
-  buildFieldMap,
+  substituteMutualNdaCoverPage,
+  buildMutualNdaFieldMap,
   renderFullDocument,
 } from "@/lib/templates/engine";
 
@@ -62,7 +62,7 @@ describe("Template Engine Edge Cases", () => {
       };
 
       // Pipe characters should be escaped to prevent table breakage
-      const result = substituteCoverPage(cover, values);
+      const result = substituteMutualNdaCoverPage(cover, values);
       expect(result).toContain("Alice \\| Bob");
     });
   });
@@ -79,7 +79,7 @@ describe("Template Engine Edge Cases", () => {
     it("handles multiline values in cover page fields", () => {
       const multiline = "Line 1\nLine 2\nLine 3";
       const md = "Jurisdiction: [Fill in city or county and state, i.e. \"courts located in New Castle, DE\"]";
-      const result = substituteCoverPage(md, { jurisdiction: multiline });
+      const result = substituteMutualNdaCoverPage(md, { jurisdiction: multiline });
       expect(result).toContain("Line 1\nLine 2\nLine 3");
     });
   });
@@ -110,9 +110,9 @@ describe("Template Engine Edge Cases", () => {
     });
   });
 
-  describe("buildFieldMap edge cases", () => {
+  describe("buildMutualNdaFieldMap edge cases", () => {
     it("handles zero years", () => {
-      const map = buildFieldMap({
+      const map = buildMutualNdaFieldMap({
         mndaTermType: "fixed",
         mndaTermYears: "0",
         confidentialityType: "fixed",
@@ -122,7 +122,7 @@ describe("Template Engine Edge Cases", () => {
     });
 
     it("handles decimal years", () => {
-      const map = buildFieldMap({
+      const map = buildMutualNdaFieldMap({
         mndaTermType: "fixed",
         mndaTermYears: "1.5",
         confidentialityType: "fixed",
@@ -132,7 +132,7 @@ describe("Template Engine Edge Cases", () => {
     });
 
     it("handles large year values", () => {
-      const map = buildFieldMap({
+      const map = buildMutualNdaFieldMap({
         mndaTermType: "fixed",
         mndaTermYears: "99",
         confidentialityType: "fixed",

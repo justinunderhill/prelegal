@@ -1,0 +1,91 @@
+import { z } from "zod";
+import { AgreementConfig, FieldDef } from "../templates/types";
+import { generateGenericCoverPage } from "../templates/coverPageGenerator";
+
+const partnershipSchema = z.object({
+  company_name: z.string(),
+  partner_name: z.string(),
+  effective_date: z.string(),
+  governing_law: z.string(),
+  chosen_courts: z.string(),
+  general_cap_amount: z.string(),
+  increased_cap_amount: z.string(),
+  increased_claims: z.string(),
+  unlimited_claims: z.string(),
+  additional_warranties: z.string(),
+  brand_guidelines: z.string(),
+  dpa: z.string(),
+  company_covered_claims: z.string(),
+  partner_covered_claims: z.string(),
+  obligations: z.string(),
+  payment_process: z.string(),
+  payment_schedule: z.string(),
+  territory: z.string(),
+  end_date: z.string(),
+});
+
+const fields: FieldDef[] = [
+  { key: "company_name", label: "Company Name", type: "text", placeholder: "e.g., Acme Corp", group: "Parties" },
+  { key: "partner_name", label: "Partner Name", type: "text", placeholder: "e.g., Beta Inc.", group: "Parties" },
+  { key: "effective_date", label: "Effective Date", type: "date", group: "Key Terms" },
+  { key: "end_date", label: "End Date", type: "date", group: "Business Terms" },
+  { key: "obligations", label: "Obligations", type: "textarea", placeholder: "Description of each party's obligations", group: "Business Terms" },
+  { key: "territory", label: "Territory", type: "text", placeholder: "e.g., United States, Worldwide", group: "Business Terms" },
+  { key: "payment_process", label: "Payment Process", type: "text", placeholder: "e.g., Monthly invoicing, Net 30", group: "Business Terms" },
+  { key: "payment_schedule", label: "Payment Schedule", type: "text", placeholder: "e.g., Monthly, Quarterly in advance", group: "Business Terms" },
+  { key: "governing_law", label: "Governing Law", type: "text", placeholder: "e.g., New York", group: "Legal Terms" },
+  { key: "chosen_courts", label: "Chosen Courts", type: "text", placeholder: "e.g., courts in Manhattan, NY", group: "Legal Terms" },
+  { key: "general_cap_amount", label: "General Cap Amount", type: "text", group: "Legal Terms" },
+  { key: "increased_cap_amount", label: "Increased Cap Amount", type: "text", group: "Legal Terms" },
+  { key: "increased_claims", label: "Increased Claims", type: "textarea", group: "Legal Terms" },
+  { key: "unlimited_claims", label: "Unlimited Claims", type: "textarea", group: "Legal Terms" },
+  { key: "additional_warranties", label: "Additional Warranties", type: "textarea", group: "Legal Terms" },
+  { key: "brand_guidelines", label: "Brand Guidelines", type: "text", placeholder: "URL or description", group: "Legal Terms" },
+  { key: "dpa", label: "DPA", type: "text", placeholder: "Yes or No", group: "Legal Terms" },
+  { key: "company_covered_claims", label: "Company Covered Claims", type: "textarea", group: "Legal Terms" },
+  { key: "partner_covered_claims", label: "Partner Covered Claims", type: "textarea", group: "Legal Terms" },
+];
+
+export const partnershipConfig: AgreementConfig = {
+  slug: "partnership",
+  name: "Partnership Agreement",
+  description: "Business partnerships covering mutual obligations, trademark licensing, payment, and confidentiality.",
+  coverTemplate: null,
+  termsTemplate: "/templates/Partnership-Agreement.md",
+  fields,
+  schema: partnershipSchema,
+  buildFieldMap: (values) => {
+    const v = values as Record<string, string>;
+    return {
+      Company: v.company_name || "[Company]",
+      Partner: v.partner_name || "[Partner]",
+      "Effective Date": v.effective_date || "[Effective Date]",
+      "End Date": v.end_date || "[End Date]",
+      Obligations: v.obligations || "[Obligations]",
+      Territory: v.territory || "[Territory]",
+      "Payment Process": v.payment_process || "[Payment Process]",
+      "Payment Schedule": v.payment_schedule || "[Payment Schedule]",
+      "Governing Law": v.governing_law || "[Governing Law]",
+      "Chosen Courts": v.chosen_courts || "[Chosen Courts]",
+      "General Cap Amount": v.general_cap_amount || "[General Cap Amount]",
+      "Increased Cap Amount": v.increased_cap_amount || "[Increased Cap Amount]",
+      "Increased Claims": v.increased_claims || "[Increased Claims]",
+      "Unlimited Claims": v.unlimited_claims || "[Unlimited Claims]",
+      "Additional Warranties": v.additional_warranties || "None",
+      "Brand Guidelines": v.brand_guidelines || "[Brand Guidelines]",
+      DPA: v.dpa || "[DPA]",
+      "Company Covered Claim": v.company_covered_claims || "[Company Covered Claims]",
+      "Company Covered Claims": v.company_covered_claims || "[Company Covered Claims]",
+      "Partner Covered Claim": v.partner_covered_claims || "[Partner Covered Claims]",
+      "Partner Covered Claims": v.partner_covered_claims || "[Partner Covered Claims]",
+    };
+  },
+  generateCoverPage: (values) => generateGenericCoverPage("Partnership Agreement", fields, values),
+  defaultValues: {
+    company_name: "", partner_name: "", effective_date: "", governing_law: "",
+    chosen_courts: "", general_cap_amount: "", increased_cap_amount: "",
+    increased_claims: "", unlimited_claims: "", additional_warranties: "",
+    brand_guidelines: "", dpa: "", company_covered_claims: "", partner_covered_claims: "",
+    obligations: "", payment_process: "", payment_schedule: "", territory: "", end_date: "",
+  },
+};

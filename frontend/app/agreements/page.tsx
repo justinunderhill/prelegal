@@ -1,5 +1,6 @@
 import { AppShell } from "@/components/layout/AppShell";
 import { AgreementCard } from "@/components/agreements/AgreementCard";
+import { IntakeChat } from "@/components/agreements/IntakeChat";
 import { getAllAgreements } from "@/lib/agreements";
 
 export default function AgreementsPage() {
@@ -13,10 +14,10 @@ export default function AgreementsPage() {
             Legal Agreements
           </h1>
           <p className="mt-2 text-lg text-brand-gray">
-            Select an agreement type to get started. Fill in your details and
-            download a ready-to-sign document.
+            Select an agreement type to get started, or ask our AI assistant to help you choose.
           </p>
         </div>
+        <IntakeChat />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {agreements.map((config) => (
             <AgreementCard key={config.slug} config={config} />

@@ -1,0 +1,92 @@
+import { z } from "zod";
+import { AgreementConfig, FieldDef } from "../templates/types";
+import { generateGenericCoverPage } from "../templates/coverPageGenerator";
+
+const csaSchema = z.object({
+  provider_name: z.string(),
+  customer_name: z.string(),
+  effective_date: z.string(),
+  governing_law: z.string(),
+  general_cap_amount: z.string(),
+  increased_cap_amount: z.string(),
+  increased_claims: z.string(),
+  unlimited_claims: z.string(),
+  additional_warranties: z.string(),
+  security_policy: z.string(),
+  dpa: z.string(),
+  provider_covered_claims: z.string(),
+  customer_covered_claims: z.string(),
+  order_date: z.string(),
+  subscription_period: z.string(),
+  non_renewal_notice_date: z.string(),
+  payment_process: z.string(),
+  technical_support: z.string(),
+  use_limitations: z.string(),
+});
+
+const fields: FieldDef[] = [
+  { key: "provider_name", label: "Provider Name", type: "text", placeholder: "e.g., Acme Cloud Inc.", group: "Parties" },
+  { key: "customer_name", label: "Customer Name", type: "text", placeholder: "e.g., Beta Corp", group: "Parties" },
+  { key: "effective_date", label: "Effective Date", type: "date", group: "Key Terms" },
+  { key: "order_date", label: "Order Date", type: "date", group: "Order Form" },
+  { key: "subscription_period", label: "Subscription Period", type: "text", placeholder: "e.g., 1 year", group: "Order Form" },
+  { key: "non_renewal_notice_date", label: "Non-Renewal Notice Date", type: "text", placeholder: "e.g., 30 days before end of Subscription Period", group: "Order Form" },
+  { key: "payment_process", label: "Payment Process", type: "text", placeholder: "e.g., Net 30 invoicing", group: "Order Form" },
+  { key: "technical_support", label: "Technical Support", type: "text", placeholder: "e.g., Standard email support", group: "Order Form" },
+  { key: "use_limitations", label: "Use Limitations", type: "text", placeholder: "e.g., 100 user seats", group: "Order Form" },
+  { key: "governing_law", label: "Governing Law", type: "text", placeholder: "e.g., Delaware", group: "Legal Terms" },
+  { key: "general_cap_amount", label: "General Cap Amount", type: "text", placeholder: "e.g., Fees paid in prior 12 months", group: "Legal Terms" },
+  { key: "increased_cap_amount", label: "Increased Cap Amount", type: "text", placeholder: "e.g., 2x the General Cap Amount", group: "Legal Terms" },
+  { key: "increased_claims", label: "Increased Claims", type: "textarea", placeholder: "Claims subject to increased cap", group: "Legal Terms" },
+  { key: "unlimited_claims", label: "Unlimited Claims", type: "textarea", placeholder: "Claims with no cap", group: "Legal Terms" },
+  { key: "additional_warranties", label: "Additional Warranties", type: "textarea", placeholder: "Any additional warranties (optional)", group: "Legal Terms" },
+  { key: "security_policy", label: "Security Policy", type: "text", placeholder: "URL or description (optional)", group: "Legal Terms" },
+  { key: "dpa", label: "DPA", type: "text", placeholder: "Yes or No", group: "Legal Terms" },
+  { key: "provider_covered_claims", label: "Provider Covered Claims", type: "textarea", placeholder: "Claims provider indemnifies", group: "Legal Terms" },
+  { key: "customer_covered_claims", label: "Customer Covered Claims", type: "textarea", placeholder: "Claims customer indemnifies", group: "Legal Terms" },
+];
+
+export const csaConfig: AgreementConfig = {
+  slug: "csa",
+  name: "Cloud Service Agreement",
+  description: "Standard terms for SaaS products, covering access, restrictions, privacy, payment, warranties, and liability.",
+  coverTemplate: null,
+  termsTemplate: "/templates/CSA.md",
+  fields,
+  schema: csaSchema,
+  buildFieldMap: (values) => {
+    const v = values as Record<string, string>;
+    return {
+      Provider: v.provider_name || "[Provider]",
+      Customer: v.customer_name || "[Customer]",
+      "Effective Date": v.effective_date || "[Effective Date]",
+      "Governing Law": v.governing_law || "[Governing Law]",
+      "General Cap Amount": v.general_cap_amount || "[General Cap Amount]",
+      "Increased Cap Amount": v.increased_cap_amount || "[Increased Cap Amount]",
+      "Increased Claims": v.increased_claims || "[Increased Claims]",
+      "Unlimited Claims": v.unlimited_claims || "[Unlimited Claims]",
+      "Additional Warranties": v.additional_warranties || "None",
+      "Security Policy": v.security_policy || "[Security Policy]",
+      DPA: v.dpa || "[DPA]",
+      "Provider Covered Claim": v.provider_covered_claims || "[Provider Covered Claims]",
+      "Provider Covered Claims": v.provider_covered_claims || "[Provider Covered Claims]",
+      "Customer Covered Claim": v.customer_covered_claims || "[Customer Covered Claims]",
+      "Customer Covered Claims": v.customer_covered_claims || "[Customer Covered Claims]",
+      "Subscription Period": v.subscription_period || "[Subscription Period]",
+      "Technical Support": v.technical_support || "[Technical Support]",
+      "Use Limitations": v.use_limitations || "[Use Limitations]",
+      "Payment Process": v.payment_process || "[Payment Process]",
+      "Order Date": v.order_date || "[Order Date]",
+      "Non-Renewal Notice Date": v.non_renewal_notice_date || "[Non-Renewal Notice Date]",
+    };
+  },
+  generateCoverPage: (values) => generateGenericCoverPage("Cloud Service Agreement", fields, values),
+  defaultValues: {
+    provider_name: "", customer_name: "", effective_date: "", governing_law: "",
+    general_cap_amount: "", increased_cap_amount: "", increased_claims: "",
+    unlimited_claims: "", additional_warranties: "", security_policy: "", dpa: "",
+    provider_covered_claims: "", customer_covered_claims: "", order_date: "",
+    subscription_period: "", non_renewal_notice_date: "", payment_process: "",
+    technical_support: "", use_limitations: "",
+  },
+};

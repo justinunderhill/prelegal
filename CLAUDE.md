@@ -74,11 +74,35 @@ Backend available at http://localhost:8000
 - Start/stop scripts for Mac, Linux, Windows
 - `.dockerignore` to prevent secrets in Docker images
 
+### Completed (PL-6)
+- AI chat mode for Mutual NDA: freeform conversation to populate NDA fields
+- Chat-only UI (no manual form mode toggle) with side-by-side chat + live document preview
+- `POST /api/chat` endpoint using OpenAI SDK with Structured Outputs (model: `gpt-5.3-codex`)
+- Backend service layer with agreement registry (`backend/app/agreements/`) for extensibility
+- Live document preview updates as AI extracts field values from conversation
+- Chat is ephemeral (no DB persistence), API key stays server-side
+- Viewport-locked layout: chat and preview panels fit within screen, no page scrolling
+- Dockerfile WORKDIR fix for correct uvicorn module resolution
+
+### Completed (PL-7)
+- Expanded from Mutual NDA to all 11 agreement types: CSA, DPA, PSA, SLA, Design Partner, Partnership, Pilot, BAA, Software License, AI Addendum
+- Backend: `ChatConfig` + Pydantic schema per agreement type, all registered in `backend/app/agreements/registry.py`
+- Frontend: `AgreementConfig` per type in `frontend/lib/agreements/`, each with fields, Zod schema, `buildFieldMap()`, and `generateCoverPage()`
+- Generic cover page generator (`coverPageGenerator.ts`) for non-NDA agreements; Mutual NDA retains custom cover page logic
+- Markdown templates with `<span>` placeholder substitution for all agreement types in `frontend/public/templates/`
+- Intake chat component (`IntakeChat.tsx`) for guiding users to the right document type
+- PDF generation supports all types: `MutualNdaCoverPagePdf` for NDA, `GenericCoverPagePdf` for all others
+- Agreement catalog page showing all available document types
+- Dynamic `[slug]` routing serves all agreement builders
+
 ### Current API Endpoints
 - `GET /api/health` - Health check
+- `POST /api/chat` - AI chat for agreement field extraction
 
 ### Architecture Notes
 - Frontend builds to `frontend/out/` via `next build`, served by FastAPI `StaticFiles(html=True)`
 - `trailingSlash: true` required so Next.js generates `dir/index.html` files compatible with StaticFiles
 - Auth uses `lib/auth/client.ts` abstraction — swap to real API calls when implementing real auth
 - API routers must be registered before the StaticFiles mount in `backend/app/main.py`
+- Chat uses flat party field names on backend (`party1_name`), nested on frontend (`party1.name`) — `useChatSession` hook handles the mapping
+- AppShell uses `h-screen overflow-hidden` to lock layout to viewport; panels scroll independently

@@ -1,7 +1,7 @@
 import {
   substituteSpanLinks,
-  substituteCoverPage,
-  buildFieldMap,
+  substituteMutualNdaCoverPage,
+  buildMutualNdaFieldMap,
   renderFullDocument,
 } from "@/lib/templates/engine";
 
@@ -62,7 +62,7 @@ describe("substituteSpanLinks", () => {
   });
 });
 
-describe("substituteCoverPage", () => {
+describe("substituteMutualNdaCoverPage", () => {
   // Load the actual cover page template
   const coverTemplate = `# Mutual Non-Disclosure Agreement
 
@@ -137,65 +137,65 @@ Common Paper Mutual Non-Disclosure Agreement (Version 1.0) free to use under [CC
   };
 
   it("substitutes the effective date", () => {
-    const result = substituteCoverPage(coverTemplate, defaultValues);
+    const result = substituteMutualNdaCoverPage(coverTemplate, defaultValues);
     expect(result).toContain("2026-04-01");
     expect(result).not.toContain("[Today's date]");
   });
 
   it("substitutes governing law", () => {
-    const result = substituteCoverPage(coverTemplate, defaultValues);
+    const result = substituteMutualNdaCoverPage(coverTemplate, defaultValues);
     expect(result).toContain("Governing Law: Delaware");
     expect(result).not.toContain("[Fill in state]");
   });
 
   it("substitutes jurisdiction", () => {
-    const result = substituteCoverPage(coverTemplate, defaultValues);
+    const result = substituteMutualNdaCoverPage(coverTemplate, defaultValues);
     expect(result).toContain("Jurisdiction: courts located in New Castle, DE");
   });
 
   it("replaces MNDA term years when type is fixed", () => {
-    const result = substituteCoverPage(coverTemplate, defaultValues);
+    const result = substituteMutualNdaCoverPage(coverTemplate, defaultValues);
     expect(result).toContain("Expires 2 year(s) from Effective Date.");
   });
 
   it("toggles checkboxes when MNDA term is until_terminated", () => {
     const values = { ...defaultValues, mndaTermType: "until_terminated" };
-    const result = substituteCoverPage(coverTemplate, values);
+    const result = substituteMutualNdaCoverPage(coverTemplate, values);
     expect(result).toContain("- [x]     Continues until terminated");
     expect(result).toMatch(/- \[ \]\s+Expires/);
   });
 
   it("replaces confidentiality years when type is fixed", () => {
-    const result = substituteCoverPage(coverTemplate, defaultValues);
+    const result = substituteMutualNdaCoverPage(coverTemplate, defaultValues);
     expect(result).toContain("3 year(s) from Effective Date, but in the case");
   });
 
   it("toggles checkboxes when confidentiality is perpetual", () => {
     const values = { ...defaultValues, confidentialityType: "perpetual" };
-    const result = substituteCoverPage(coverTemplate, values);
+    const result = substituteMutualNdaCoverPage(coverTemplate, values);
     expect(result).toContain("- [x]     In perpetuity.");
   });
 
   it("substitutes party names in the signature table", () => {
-    const result = substituteCoverPage(coverTemplate, defaultValues);
+    const result = substituteMutualNdaCoverPage(coverTemplate, defaultValues);
     expect(result).toContain("Alice Smith");
     expect(result).toContain("Bob Jones");
   });
 
   it("substitutes party titles in the signature table", () => {
-    const result = substituteCoverPage(coverTemplate, defaultValues);
+    const result = substituteMutualNdaCoverPage(coverTemplate, defaultValues);
     expect(result).toContain("CEO");
     expect(result).toContain("CTO");
   });
 
   it("substitutes party companies in the signature table", () => {
-    const result = substituteCoverPage(coverTemplate, defaultValues);
+    const result = substituteMutualNdaCoverPage(coverTemplate, defaultValues);
     expect(result).toContain("Acme Corp");
     expect(result).toContain("Beta Inc");
   });
 
   it("substitutes party addresses in the signature table", () => {
-    const result = substituteCoverPage(coverTemplate, defaultValues);
+    const result = substituteMutualNdaCoverPage(coverTemplate, defaultValues);
     expect(result).toContain("alice@acme.com");
     expect(result).toContain("bob@beta.com");
   });
@@ -205,7 +205,7 @@ Common Paper Mutual Non-Disclosure Agreement (Version 1.0) free to use under [CC
       ...defaultValues,
       modifications: "Section 5 is deleted in its entirety.",
     };
-    const result = substituteCoverPage(coverTemplate, values);
+    const result = substituteMutualNdaCoverPage(coverTemplate, values);
     expect(result).toContain("Section 5 is deleted in its entirety.");
     expect(result).not.toContain("List any modifications to the MNDA");
   });
@@ -216,13 +216,13 @@ Common Paper Mutual Non-Disclosure Agreement (Version 1.0) free to use under [CC
       party1: { name: "", title: "", company: "", address: "", signature: "" },
       party2: undefined,
     };
-    const result = substituteCoverPage(coverTemplate, values);
+    const result = substituteMutualNdaCoverPage(coverTemplate, values);
     // Should not throw
     expect(result).toBeDefined();
   });
 
   it("preserves the purpose default when same value provided", () => {
-    const result = substituteCoverPage(coverTemplate, defaultValues);
+    const result = substituteMutualNdaCoverPage(coverTemplate, defaultValues);
     // The default purpose is the same as the placeholder, so it should appear once
     expect(result).toContain(
       "Evaluating whether to enter into a business relationship with the other party."
@@ -235,7 +235,7 @@ Common Paper Mutual Non-Disclosure Agreement (Version 1.0) free to use under [CC
       governingLaw: "New York (NY)",
       jurisdiction: 'courts located in Manhattan, NY "Southern District"',
     };
-    const result = substituteCoverPage(coverTemplate, values);
+    const result = substituteMutualNdaCoverPage(coverTemplate, values);
     expect(result).toContain("New York (NY)");
     expect(result).toContain(
       'courts located in Manhattan, NY "Southern District"'
@@ -243,7 +243,7 @@ Common Paper Mutual Non-Disclosure Agreement (Version 1.0) free to use under [CC
   });
 });
 
-describe("buildFieldMap", () => {
+describe("buildMutualNdaFieldMap", () => {
   it("maps fixed MNDA term with custom years", () => {
     const values = {
       purpose: "Testing",
@@ -255,7 +255,7 @@ describe("buildFieldMap", () => {
       governingLaw: "California",
       jurisdiction: "San Francisco, CA",
     };
-    const map = buildFieldMap(values);
+    const map = buildMutualNdaFieldMap(values);
     expect(map.Purpose).toBe("Testing");
     expect(map["Effective Date"]).toBe("2026-01-01");
     expect(map["MNDA Term"]).toBe("3 year(s) from the Effective Date");
@@ -273,7 +273,7 @@ describe("buildFieldMap", () => {
       confidentialityType: "fixed",
       confidentialityYears: "1",
     };
-    const map = buildFieldMap(values);
+    const map = buildMutualNdaFieldMap(values);
     expect(map["MNDA Term"]).toBe("until terminated by either party");
   });
 
@@ -284,12 +284,12 @@ describe("buildFieldMap", () => {
       confidentialityType: "perpetual",
       confidentialityYears: "1",
     };
-    const map = buildFieldMap(values);
+    const map = buildMutualNdaFieldMap(values);
     expect(map["Term of Confidentiality"]).toBe("perpetuity");
   });
 
   it("uses placeholder fallbacks for empty values", () => {
-    const map = buildFieldMap({});
+    const map = buildMutualNdaFieldMap({});
     expect(map.Purpose).toBe("[Purpose]");
     expect(map["Effective Date"]).toBe("[Effective Date]");
     expect(map["Governing Law"]).toBe("[Governing Law]");
@@ -301,7 +301,7 @@ describe("buildFieldMap", () => {
       mndaTermType: "fixed",
       confidentialityType: "fixed",
     };
-    const map = buildFieldMap(values);
+    const map = buildMutualNdaFieldMap(values);
     expect(map["MNDA Term"]).toBe("1 year(s) from the Effective Date");
     expect(map["Term of Confidentiality"]).toBe(
       "1 year(s) from the Effective Date"
@@ -310,29 +310,21 @@ describe("buildFieldMap", () => {
 });
 
 describe("renderFullDocument", () => {
-  const coverTemplate = `# Cover Page
-Purpose: [Evaluating whether to enter into a business relationship with the other party.]
-Date: [Today's date]
-Law: [Fill in state]`;
-
-  const termsTemplate = `# Standard Terms
+  it("renders both cover page and standard terms separated by divider", () => {
+    const coverMarkdown = "# Cover Page\nPurpose: Joint venture evaluation\nDate: 2026-06-15\nLaw: Texas";
+    const termsTemplate = `# Standard Terms
 Purpose: <span class="coverpage_link">Purpose</span>
 Date: <span class="coverpage_link">Effective Date</span>
 Law: <span class="coverpage_link">Governing Law</span>`;
-
-  it("renders both cover page and standard terms separated by divider", () => {
-    const values = {
-      purpose: "Joint venture evaluation",
-      effectiveDate: "2026-06-15",
-      governingLaw: "Texas",
-      mndaTermType: "fixed",
-      mndaTermYears: "1",
-      confidentialityType: "fixed",
-      confidentialityYears: "1",
+    const fieldMap = {
+      Purpose: "Joint venture evaluation",
+      "Effective Date": "2026-06-15",
+      "Governing Law": "Texas",
     };
-    const result = renderFullDocument(coverTemplate, termsTemplate, values);
 
-    // Cover page substitutions
+    const result = renderFullDocument(coverMarkdown, termsTemplate, fieldMap);
+
+    // Cover page content
     expect(result).toContain("Purpose: Joint venture evaluation");
     expect(result).toContain("Date: 2026-06-15");
     expect(result).toContain("Law: Texas");
@@ -346,8 +338,10 @@ Law: <span class="coverpage_link">Governing Law</span>`;
     expect(result).toContain("Law: Texas");
   });
 
-  it("keeps placeholders when values are empty", () => {
-    const result = renderFullDocument(coverTemplate, termsTemplate, {});
+  it("keeps placeholders when fieldMap has no matching entry", () => {
+    const coverMarkdown = "# Cover";
+    const termsTemplate = `<span class="coverpage_link">Purpose</span> <span class="coverpage_link">Effective Date</span> <span class="coverpage_link">Governing Law</span>`;
+    const result = renderFullDocument(coverMarkdown, termsTemplate, {});
     expect(result).toContain("[Purpose]");
     expect(result).toContain("[Effective Date]");
     expect(result).toContain("[Governing Law]");

@@ -31,6 +31,7 @@ const mockConfig: AgreementConfig = {
   fields: [],
   schema: z.object({}),
   defaultValues: {},
+  buildFieldMap: () => ({}),
 };
 
 describe("AgreementCard", () => {

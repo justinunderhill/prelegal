@@ -18,7 +18,7 @@ import { DocumentPreview } from "@/components/builder/preview/DocumentPreview";
 describe("DocumentPreview", () => {
   it("shows loading state when templates are empty", () => {
     render(
-      <DocumentPreview coverTemplate="" termsTemplate="" values={{}} />
+      <DocumentPreview coverMarkdown="" termsTemplate="" fieldMap={{}} />
     );
     expect(screen.getByText("Loading document preview...")).toBeDefined();
   });
@@ -26,9 +26,9 @@ describe("DocumentPreview", () => {
   it("renders markdown when templates are provided", () => {
     render(
       <DocumentPreview
-        coverTemplate="# Cover Page"
+        coverMarkdown="# Cover Page"
         termsTemplate="# Standard Terms"
-        values={{}}
+        fieldMap={{}}
       />
     );
     const preview = screen.getByTestId("markdown-preview");
@@ -38,35 +38,36 @@ describe("DocumentPreview", () => {
   });
 
   it("passes substituted values into the rendered document", () => {
-    const cover = "Purpose: [Evaluating whether to enter into a business relationship with the other party.]";
+    const cover = "Purpose: Joint venture";
     const terms =
       'The <span class="coverpage_link">Purpose</span> of this agreement.';
-    const values = {
-      purpose: "Joint venture",
-      mndaTermType: "fixed",
-      mndaTermYears: "1",
-      confidentialityType: "fixed",
-      confidentialityYears: "1",
+    const fieldMap = {
+      Purpose: "Joint venture",
+      "Effective Date": "2026-04-01",
+      "MNDA Term": "1 year(s) from the Effective Date",
+      "Term of Confidentiality": "1 year(s) from the Effective Date",
+      "Governing Law": "[Governing Law]",
+      Jurisdiction: "[Jurisdiction]",
     };
     render(
       <DocumentPreview
-        coverTemplate={cover}
+        coverMarkdown={cover}
         termsTemplate={terms}
-        values={values}
+        fieldMap={fieldMap}
       />
     );
     const preview = screen.getByTestId("markdown-preview");
     expect(preview.textContent).toContain("Joint venture");
   });
 
-  it("shows field placeholders when values are empty", () => {
+  it("shows field placeholders when fieldMap has no matching entry", () => {
     const terms =
       'The <span class="coverpage_link">Purpose</span> is important.';
     render(
       <DocumentPreview
-        coverTemplate="# Cover"
+        coverMarkdown="# Cover"
         termsTemplate={terms}
-        values={{}}
+        fieldMap={{}}
       />
     );
     const preview = screen.getByTestId("markdown-preview");
@@ -76,30 +77,26 @@ describe("DocumentPreview", () => {
   it("renders a divider between cover and terms", () => {
     render(
       <DocumentPreview
-        coverTemplate="# Cover"
+        coverMarkdown="# Cover"
         termsTemplate="# Terms"
-        values={{}}
+        fieldMap={{}}
       />
     );
     const preview = screen.getByTestId("markdown-preview");
     expect(preview.textContent).toContain("---");
   });
 
-  it("handles special characters in values safely", () => {
+  it("handles special characters in field values safely", () => {
     const terms =
       'Law: <span class="coverpage_link">Governing Law</span>';
-    const values = {
-      governingLaw: 'New York <script>alert("xss")</script>',
-      mndaTermType: "fixed",
-      mndaTermYears: "1",
-      confidentialityType: "fixed",
-      confidentialityYears: "1",
+    const fieldMap = {
+      "Governing Law": 'New York <script>alert("xss")</script>',
     };
     render(
       <DocumentPreview
-        coverTemplate="# Cover"
+        coverMarkdown="# Cover"
         termsTemplate={terms}
-        values={values}
+        fieldMap={fieldMap}
       />
     );
     const preview = screen.getByTestId("markdown-preview");
