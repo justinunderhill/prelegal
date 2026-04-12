@@ -2,4 +2,4 @@
 
 A platform for drafting common legal agreements.
 
-> **Status:** This project is currently in progress and is expected to be completed by April 7, 2026.
+> **Status:** This project is set to MVP and will be improved over time.
