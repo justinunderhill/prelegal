@@ -26,12 +26,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-100 via-white to-slate-100 px-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#032147]">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-navy to-brand-blue shadow-lg shadow-brand-navy/25">
             <svg
-              className="h-6 w-6 text-white"
+              className="h-7 w-7 text-white"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}
@@ -44,7 +44,7 @@ export default function LoginPage() {
               />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-[#032147]">PreLegal</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-[#032147]">PreLegal</h1>
           <p className="mt-1 text-sm text-[#888888]">
             Sign in to create legal agreements
           </p>
@@ -52,7 +52,7 @@ export default function LoginPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm"
+          className="rounded-2xl border border-gray-200/70 bg-white p-8 shadow-floating-lg"
         >
           {error && (
             <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
@@ -96,7 +96,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-[#753991] px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#5e2d75] focus:outline-none focus:ring-2 focus:ring-[#753991] focus:ring-offset-2"
+            className="w-full rounded-lg bg-gradient-to-br from-brand-purple to-[#5e2d75] px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-purple/25 transition-all hover:shadow-lg hover:shadow-brand-purple/30 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#753991] focus:ring-offset-2 active:scale-[0.99]"
           >
             Sign In
           </button>

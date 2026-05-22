@@ -14,13 +14,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
-      <header className="sticky top-0 z-30 border-b border-gray-200 bg-white">
+    <div className="flex min-h-screen flex-col bg-slate-50">
+      <header className="sticky top-0 z-30 border-b border-gray-200/70 bg-white/85 shadow-sm backdrop-blur-md">
         <div className="mx-auto flex h-14 items-center justify-between px-4 sm:h-16 sm:max-w-7xl sm:px-6">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-navy">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-navy to-brand-blue shadow-md shadow-brand-navy/20">
               <svg
-                className="h-4 w-4 text-white"
+                className="h-4.5 w-4.5 text-white"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2}
@@ -33,7 +33,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 />
               </svg>
             </div>
-            <span className="text-lg font-semibold text-brand-navy">PreLegal</span>
+            <span className="text-lg font-bold tracking-tight text-brand-navy">PreLegal</span>
           </Link>
           <nav className="flex items-center gap-3 sm:gap-6">
             <Link

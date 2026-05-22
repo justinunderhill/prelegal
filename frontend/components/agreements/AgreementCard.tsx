@@ -9,14 +9,14 @@ export function AgreementCard({ config }: AgreementCardProps) {
   return (
     <Link
       href={`/agreements/${config.slug}`}
-      className="group flex flex-col rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:border-brand-blue/30 hover:shadow-md"
+      className="group flex flex-col rounded-2xl border border-gray-200/70 bg-white p-6 shadow-floating transition-all duration-200 hover:-translate-y-1 hover:border-brand-blue/30 hover:shadow-floating-lg"
     >
-      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-blue/10 transition-colors group-hover:bg-brand-blue/20">
+      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-blue to-brand-purple shadow-md shadow-brand-purple/20 transition-transform duration-200 group-hover:scale-105">
         <svg
-          className="h-5 w-5 text-brand-blue"
+          className="h-5 w-5 text-white"
           fill="none"
           viewBox="0 0 24 24"
-          strokeWidth={1.5}
+          strokeWidth={1.8}
           stroke="currentColor"
         >
           <path
