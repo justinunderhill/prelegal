@@ -1,0 +1,4 @@
+# Dependencies for the Vercel Python serverless function (api/chat.py).
+# Kept minimal: the chat logic only needs the OpenAI SDK and Pydantic.
+openai>=1.50,<3
+pydantic>=2.5
