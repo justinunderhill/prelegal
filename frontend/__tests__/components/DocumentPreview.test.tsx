@@ -6,6 +6,7 @@ jest.mock("react-markdown", () => {
     return <div data-testid="markdown-preview">{children}</div>;
   };
 });
+jest.mock("remark-gfm", () => () => {});
 jest.mock("rehype-raw", () => () => {});
 jest.mock("rehype-sanitize", () => {
   const mock = () => {};
