@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, ReactNode } from "react";
 import { User } from "@/lib/auth/types";
 import * as authClient from "@/lib/auth/client";
 
@@ -14,13 +14,8 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setUser(authClient.getStoredUser());
-    setIsLoading(false);
-  }, []);
+  const [user, setUser] = useState<User | null>(() => authClient.getStoredUser());
+  const [isLoading] = useState(false);
 
   const signIn = useCallback(async (email: string, _password: string) => {
     const user = authClient.signIn(email);

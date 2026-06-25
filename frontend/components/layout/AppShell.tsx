@@ -40,7 +40,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               href="/agreements"
               className="text-sm font-medium text-brand-gray transition-colors hover:text-brand-navy"
             >
-              Agreements
+              Templates
+            </Link>
+            <Link
+              href="/documents"
+              className="text-sm font-medium text-brand-gray transition-colors hover:text-brand-navy"
+            >
+              Documents
             </Link>
             {user && (
               <>

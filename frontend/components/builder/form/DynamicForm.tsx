@@ -11,6 +11,8 @@ interface DynamicFormProps {
   setValue: any;
   watch: any;
   errors: FieldErrors;
+  groupProgress?: Record<string, { completed: number; total: number }>;
+  idPrefix?: string;
 }
 
 function groupFields(fields: FieldDef[]): Map<string, FieldDef[]> {
@@ -24,7 +26,11 @@ function groupFields(fields: FieldDef[]): Map<string, FieldDef[]> {
 }
 
 const inputStyles =
-  "w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-blue focus:outline-none focus:ring-1 focus:ring-brand-blue";
+  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-blue focus:outline-none focus:ring-1 focus:ring-brand-blue";
+
+function toSectionId(prefix: string, groupName: string): string {
+  return `${prefix}-${groupName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
+}
 
 function FieldRenderer({
   field,
@@ -45,10 +51,10 @@ function FieldRenderer({
   switch (field.type) {
     case "text":
       return (
-        <div>
+        <div className="space-y-1.5">
           <label
             htmlFor={fieldId}
-            className="mb-1 block text-sm font-medium text-gray-700"
+            className="block text-sm font-semibold text-brand-navy"
           >
             {field.label}
           </label>
@@ -70,10 +76,10 @@ function FieldRenderer({
 
     case "textarea":
       return (
-        <div>
+        <div className="space-y-1.5">
           <label
             htmlFor={fieldId}
-            className="mb-1 block text-sm font-medium text-gray-700"
+            className="block text-sm font-semibold text-brand-navy"
           >
             {field.label}
           </label>
@@ -96,10 +102,10 @@ function FieldRenderer({
 
     case "date":
       return (
-        <div>
+        <div className="space-y-1.5">
           <label
             htmlFor={fieldId}
-            className="mb-1 block text-sm font-medium text-gray-700"
+            className="block text-sm font-semibold text-brand-navy"
           >
             {field.label}
           </label>
@@ -122,14 +128,14 @@ function FieldRenderer({
     case "radio":
       return (
         <fieldset>
-          <legend className="mb-2 block text-sm font-medium text-gray-700">
+          <legend className="mb-2 block text-sm font-semibold text-brand-navy">
             {field.label}
           </legend>
-          <div className="space-y-2" role="radiogroup" aria-label={field.label}>
+          <div className="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label={field.label}>
             {field.options?.map((option) => (
               <label
                 key={option.value}
-                className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2.5 text-sm transition-colors hover:bg-gray-50 has-[:checked]:border-brand-blue has-[:checked]:bg-brand-blue/5"
+                className="flex min-h-12 cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm shadow-sm transition-colors hover:bg-slate-50 has-[:checked]:border-brand-blue has-[:checked]:bg-brand-blue/5"
               >
                 <input
                   type="radio"
@@ -137,7 +143,7 @@ function FieldRenderer({
                   value={option.value}
                   className="text-brand-blue focus:ring-brand-blue"
                 />
-                <span className="text-gray-700">{option.label}</span>
+                <span className="text-slate-700">{option.label}</span>
               </label>
             ))}
           </div>
@@ -167,17 +173,36 @@ export function DynamicForm({
   setValue,
   watch,
   errors,
+  groupProgress,
+  idPrefix = "section",
 }: DynamicFormProps) {
   const groups = groupFields(fields);
 
   return (
-    <div className="space-y-8" role="form" aria-label="Agreement form">
+    <div className="space-y-5" role="form" aria-label="Agreement form">
       {Array.from(groups.entries()).map(([groupName, groupFields]) => (
-        <section key={groupName} aria-label={groupName}>
-          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-brand-gray">
-            {groupName}
-          </h3>
-          <div className="space-y-4">
+        <section
+          key={groupName}
+          id={toSectionId(idPrefix, groupName)}
+          aria-label={groupName}
+          className="rounded-lg border border-slate-200 bg-white p-5 shadow-floating"
+        >
+          <div className="mb-5 flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
+            <div>
+              <h3 className="text-base font-semibold text-brand-navy">
+                {groupName}
+              </h3>
+              <p className="mt-1 text-sm text-slate-500">
+                Complete the fields required for this section.
+              </p>
+            </div>
+            {groupProgress?.[groupName] && (
+              <span className="shrink-0 rounded-full border border-brand-blue/20 bg-brand-blue/10 px-2.5 py-1 text-xs font-semibold text-brand-navy">
+                {groupProgress[groupName].completed}/{groupProgress[groupName].total}
+              </span>
+            )}
+          </div>
+          <div className="space-y-5">
             {groupFields.map((field) => (
               <FieldRenderer
                 key={field.key}

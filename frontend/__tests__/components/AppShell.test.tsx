@@ -40,15 +40,16 @@ describe("AppShell", () => {
     expect(screen.getByText("PreLegal")).toBeDefined();
   });
 
-  it("renders the Agreements navigation link", () => {
+  it("renders the primary navigation links", () => {
     renderWithAuth(
       <AppShell>
         <div>Content</div>
       </AppShell>
     );
-    const link = screen.getByText("Agreements");
-    expect(link).toBeDefined();
-    expect(link.closest("a")?.getAttribute("href")).toBe("/agreements");
+    const templatesLink = screen.getByText("Templates");
+    const documentsLink = screen.getByText("Documents");
+    expect(templatesLink.closest("a")?.getAttribute("href")).toBe("/agreements");
+    expect(documentsLink.closest("a")?.getAttribute("href")).toBe("/documents");
   });
 
   it("renders children content", () => {

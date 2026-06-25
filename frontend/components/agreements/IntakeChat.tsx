@@ -3,17 +3,22 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useChatSession } from "@/lib/hooks/useChatSession";
+import { getAgreementConfig } from "@/lib/agreements";
+import { saveDraft } from "@/lib/drafts";
+import { buildPrefilledDraftValues, countPrefillFields } from "@/lib/draftPrefill";
 
 export function IntakeChat() {
   const router = useRouter();
   const [suggestedSlug, setSuggestedSlug] = useState<string | null>(null);
+  const [extractedFields, setExtractedFields] = useState<Record<string, unknown>>({});
   const [isOpen, setIsOpen] = useState(false);
-  const [hasUnread, setHasUnread] = useState(false);
+  const [lastSeenMessageCount, setLastSeenMessageCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
   const handleFieldsExtracted = useCallback(
     (fields: Record<string, unknown>) => {
+      setExtractedFields((current) => ({ ...current, ...fields }));
       if (fields.suggested_slug && typeof fields.suggested_slug === "string") {
         setSuggestedSlug(fields.suggested_slug);
       }
@@ -34,17 +39,14 @@ export function IntakeChat() {
     if (isOpen && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     }
-    // Show unread dot when chat is closed and new messages arrive
-    if (!isOpen && messages.length > 1) {
-      setHasUnread(true);
-    }
   }, [messages, isLoading, isOpen]);
+
+  const hasUnread = !isOpen && messages.length > lastSeenMessageCount;
 
   const handleSend = () => {
     const text = input.trim();
     if (!text || isLoading) return;
     setInput("");
-    setSuggestedSlug(null);
     sendMessage(text);
   };
 
@@ -57,13 +59,27 @@ export function IntakeChat() {
 
   const handleStartBuilding = () => {
     if (suggestedSlug) {
+      const config = getAgreementConfig(suggestedSlug);
+      if (config) {
+        saveDraft({
+          slug: config.slug,
+          agreementName: config.name,
+          values: buildPrefilledDraftValues(config, extractedFields),
+        });
+      }
       router.push(`/agreements/${suggestedSlug}/`);
     }
   };
 
+  const suggestedConfig = suggestedSlug ? getAgreementConfig(suggestedSlug) : undefined;
+  const prefillCount = suggestedConfig
+    ? countPrefillFields(suggestedConfig, extractedFields)
+    : 0;
+
   const toggleOpen = () => {
-    setIsOpen((prev) => !prev);
-    if (!isOpen) setHasUnread(false);
+    const nextOpen = !isOpen;
+    setIsOpen(nextOpen);
+    if (nextOpen) setLastSeenMessageCount(messages.length);
   };
 
   return (
@@ -144,12 +160,25 @@ export function IntakeChat() {
 
           {/* Suggested action */}
           {suggestedSlug && (
-            <div className="border-t border-gray-100 bg-green-50 px-4 py-2.5">
+            <div className="border-t border-gray-100 bg-green-50 px-4 py-3">
+              <div className="mb-2">
+                <p className="text-xs font-semibold uppercase tracking-wide text-green-800">
+                  Recommended document
+                </p>
+                <p className="mt-0.5 text-sm font-semibold text-brand-navy">
+                  {suggestedConfig?.name ?? "Suggested agreement"}
+                </p>
+                {prefillCount > 0 && (
+                  <p className="mt-1 text-xs text-green-800">
+                    {prefillCount} field{prefillCount === 1 ? "" : "s"} will be prefilled from this conversation.
+                  </p>
+                )}
+              </div>
               <button
                 onClick={handleStartBuilding}
                 className="w-full rounded-lg bg-brand-purple px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-purple/90"
               >
-                Start building this document
+                {prefillCount > 0 ? "Continue with prefilled draft" : "Start building this document"}
               </button>
             </div>
           )}

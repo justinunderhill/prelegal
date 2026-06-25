@@ -7,6 +7,20 @@ from app.agreements.base import ChatConfig
 
 class IntakeExtractedFields(BaseModel):
     suggested_slug: str | None = None
+    purpose: str | None = None
+    effective_date: str | None = None
+    provider_name: str | None = None
+    customer_name: str | None = None
+    party1_name: str | None = None
+    party1_title: str | None = None
+    party1_company: str | None = None
+    party1_address: str | None = None
+    party2_name: str | None = None
+    party2_title: str | None = None
+    party2_company: str | None = None
+    party2_address: str | None = None
+    governing_law: str | None = None
+    jurisdiction: str | None = None
 
 
 INTAKE_SYSTEM_PROMPT = """\
@@ -64,11 +78,13 @@ RULES:
 Suggest the closest supported document that might partially meet their needs.
 4. When you are confident about the right document, set suggested_slug to that document's slug. \
 Only set suggested_slug when you have enough information to make a confident recommendation.
-5. Be conversational and helpful. Ask clarifying questions if the user's need is ambiguous.
-6. You may recommend multiple options if the situation calls for it, but only set suggested_slug \
+5. When the user mentions parties, companies, purpose, effective date, governing law, jurisdiction, \
+provider, or customer, extract those fields. Use ISO date format for effective_date when possible.
+6. Be conversational and helpful. Ask clarifying questions if the user's need is ambiguous.
+7. You may recommend multiple options if the situation calls for it, but only set suggested_slug \
 to one at a time.
-7. If the user confirms your recommendation, make sure suggested_slug is set.
-8. Start by greeting the user and asking what kind of legal document they need.
+8. If the user confirms your recommendation, make sure suggested_slug is set.
+9. Start by greeting the user and asking what kind of legal document they need.
 """
 
 INTAKE_CHAT_CONFIG = ChatConfig(
