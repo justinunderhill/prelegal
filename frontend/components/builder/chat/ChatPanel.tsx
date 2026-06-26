@@ -51,7 +51,7 @@ export function ChatPanel({ slug, agreementName, onFieldsExtracted }: ChatPanelP
               className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                 msg.role === "user"
                   ? "bg-brand-blue text-white"
-                  : "bg-gray-100 text-gray-800 border border-gray-200"
+                  : "bg-premium-muted text-gray-800 border border-premium-line"
               }`}
             >
               {msg.content}
@@ -61,7 +61,7 @@ export function ChatPanel({ slug, agreementName, onFieldsExtracted }: ChatPanelP
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="rounded-2xl bg-gray-100 border border-gray-200 px-4 py-2.5">
+            <div className="rounded-2xl bg-premium-muted border border-premium-line px-4 py-2.5">
               <div className="flex items-center gap-1.5">
                 <div className="h-2 w-2 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.3s]" />
                 <div className="h-2 w-2 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.15s]" />
@@ -81,7 +81,7 @@ export function ChatPanel({ slug, agreementName, onFieldsExtracted }: ChatPanelP
       </div>
 
       {/* Footer: input */}
-      <div className="border-t border-gray-200 bg-white px-4 py-3">
+      <div className="border-t border-premium-line bg-white px-4 py-3">
         <div className="flex gap-2">
           <input
             ref={inputRef}
@@ -91,12 +91,12 @@ export function ChatPanel({ slug, agreementName, onFieldsExtracted }: ChatPanelP
             onKeyDown={handleKeyDown}
             placeholder="Type your response..."
             disabled={isLoading}
-            className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-blue focus:outline-none focus:ring-1 focus:ring-brand-blue disabled:opacity-50"
+            className="flex-1 rounded-lg border border-premium-line bg-premium-muted px-3 py-2 text-sm focus:border-brand-blue focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-blue disabled:opacity-50"
           />
           <button
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="rounded-lg bg-brand-purple px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-purple/90 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-lg bg-brand-navy px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-blue disabled:cursor-not-allowed disabled:opacity-50"
           >
             Send
           </button>

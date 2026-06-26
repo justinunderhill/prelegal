@@ -19,10 +19,10 @@ export function AgreementCard({
   return (
     <Link
       href={`/agreements/${config.slug}`}
-      className="group flex min-h-72 flex-col rounded-lg border border-slate-200/80 bg-white p-5 shadow-floating transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-blue/40 hover:shadow-floating-lg"
+      className="group flex min-h-72 flex-col rounded-lg border border-premium-line bg-white p-5 shadow-floating transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-yellow/50 hover:shadow-floating-lg"
     >
       <div className="mb-4 flex items-start justify-between gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-navy text-white shadow-md shadow-brand-navy/15 transition-colors group-hover:bg-brand-blue">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-navy text-white shadow-sm transition-colors group-hover:bg-brand-blue">
           <svg
             className="h-5 w-5"
             fill="none"
@@ -54,7 +54,7 @@ export function AgreementCard({
       <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">
         {config.description}
       </p>
-      <div className="mt-5 border-t border-slate-100 pt-4">
+      <div className="mt-5 border-t border-premium-line/70 pt-4">
         <div className="mb-4 grid grid-cols-2 gap-3 text-xs text-slate-500">
           <div>
             <span className="block font-semibold text-brand-navy">{fieldCount}</span>

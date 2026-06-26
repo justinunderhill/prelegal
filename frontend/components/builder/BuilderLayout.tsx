@@ -180,7 +180,7 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
       <button
         type="button"
         onClick={handleClear}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-500 shadow-sm transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-premium-line bg-white px-3 py-1.5 text-sm font-semibold text-slate-500 shadow-sm transition-colors hover:border-red-200 hover:bg-red-50 hover:text-premium-danger"
       >
         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -194,7 +194,7 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
     <button
       onClick={handleDownload}
       disabled={downloading || !templatesLoaded}
-      className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-purple px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-purple/25 transition-all hover:bg-[#66317d] hover:shadow-lg hover:shadow-brand-purple/30 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-brand-purple"
+      className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-navy px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-navy/20 transition-all hover:bg-brand-blue hover:shadow-lg active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-brand-navy"
     >
       {downloading ? (
         <>
@@ -216,7 +216,7 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
   );
 
   const reviewPanel = (
-    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-floating">
+    <div className="rounded-lg border border-premium-line bg-white p-4 shadow-floating">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -290,7 +290,7 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
   );
 
   const progressPanel = (
-    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-floating">
+    <div className="rounded-lg border border-premium-line bg-white p-4 shadow-floating">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -315,7 +315,7 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
   );
 
   const sectionChecklist = (
-    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-floating">
+    <div className="rounded-lg border border-premium-line bg-white p-4 shadow-floating">
       <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
         Draft sections
       </p>
@@ -326,7 +326,7 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
             <a
               key={groupName}
               href={`#${toSectionId("desktop-builder", groupName)}`}
-              className="flex items-center justify-between gap-3 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-sm transition-colors hover:border-brand-blue/30 hover:bg-brand-blue/5"
+              className="flex items-center justify-between gap-3 rounded-lg border border-premium-line/70 bg-premium-muted px-3 py-2 text-sm transition-colors hover:border-brand-yellow/50 hover:bg-brand-yellow/5"
             >
               <span className="flex min-w-0 items-center gap-2">
                 <span
@@ -365,8 +365,8 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
   return (
     <>
       {/* Mobile: stacked layout, natural scroll */}
-      <div className="flex flex-col bg-slate-50 lg:hidden">
-        <div className="border-b border-slate-200 bg-white px-4 py-4 sm:px-6">
+      <div className="flex flex-col bg-premium-muted lg:hidden">
+        <div className="border-b border-premium-line bg-white px-4 py-4 sm:px-6">
           {builderToolbar}
           <div className="mt-4">
             <span className="rounded-full border border-brand-blue/20 bg-brand-blue/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-brand-navy">
@@ -392,22 +392,22 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
           />
         </div>
         <div className="px-4 pb-6 sm:px-6">{reviewPanel}</div>
-        <div className="border-t border-slate-200 bg-white px-4 py-4 sm:px-6">
+        <div className="border-t border-premium-line bg-white px-4 py-4 sm:px-6">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-brand-navy">Preview</h2>
             {downloadButton}
           </div>
         </div>
         <div className="px-4 pb-8 sm:px-6">
-          <div className="mx-auto max-w-2xl rounded-lg border border-slate-200 bg-white p-5 shadow-floating sm:p-8">
+          <div className="mx-auto max-w-2xl rounded-lg border border-premium-line bg-white p-5 shadow-floating sm:p-8">
             {previewContent}
           </div>
         </div>
       </div>
 
       {/* Desktop: side-by-side with independent scroll */}
-      <div className="hidden flex-col bg-slate-50 lg:flex" style={{ height: "calc(100vh - 4rem)" }}>
-        <div className="border-b border-slate-200 bg-white px-6 py-4">
+      <div className="hidden flex-col bg-premium-muted lg:flex" style={{ height: "calc(100vh - 4rem)" }}>
+        <div className="border-b border-premium-line bg-white px-6 py-4">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-6">
             <div className="min-w-0">
               {builderToolbar}
@@ -443,8 +443,8 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
 
         <div className="min-h-0 flex-1 lg:flex">
           {/* Left: Form */}
-          <div className="flex w-[46%] overflow-hidden border-r border-slate-200 bg-slate-50" role="region" aria-label="Agreement form">
-            <aside className="w-64 shrink-0 overflow-y-auto border-r border-slate-200 bg-white p-4">
+          <div className="flex w-[46%] overflow-hidden border-r border-premium-line bg-premium-muted" role="region" aria-label="Agreement form">
+            <aside className="w-64 shrink-0 overflow-y-auto border-r border-premium-line bg-white p-4">
               {progressPanel}
               <div className="mt-4">{sectionChecklist}</div>
               <div className="mt-4">{reviewPanel}</div>
@@ -463,19 +463,19 @@ export function BuilderLayout({ config }: BuilderLayoutProps) {
           </div>
 
           {/* Right: Preview */}
-          <div className="flex w-[54%] flex-col bg-slate-100" role="region" aria-label="Document preview">
-            <div className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
+          <div className="flex w-[54%] flex-col bg-premium-warm" role="region" aria-label="Document preview">
+            <div className="flex items-center justify-between border-b border-premium-line bg-white px-6 py-4">
               <div>
                 <h2 className="text-lg font-semibold text-brand-navy">Document preview</h2>
                 <p className="mt-1 text-sm text-slate-500">Live draft updates as the guided fields change.</p>
               </div>
-              <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
+              <div className="rounded-lg border border-premium-line bg-premium-muted px-3 py-2 text-sm">
                 <span className="font-semibold text-brand-navy">{completedFields}</span>
                 <span className="text-slate-500"> of {totalFields} items complete</span>
               </div>
             </div>
             <div className="flex-1 overflow-y-auto p-6">
-              <div className="mx-auto max-w-2xl rounded-lg border border-slate-200 bg-white p-8 shadow-floating sm:p-10">
+              <div className="mx-auto max-w-2xl rounded-lg border border-premium-line bg-white p-8 shadow-floating sm:p-10">
                 {previewContent}
               </div>
             </div>

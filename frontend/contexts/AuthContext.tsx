@@ -1,8 +1,9 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
 import { User } from "@/lib/auth/types";
 import * as authClient from "@/lib/auth/client";
+import { hydrateDocumentsForUser } from "@/lib/documentHydration";
 
 interface AuthContextValue {
   user: User | null;
@@ -17,8 +18,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(() => authClient.getStoredUser());
   const [isLoading] = useState(false);
 
-  const signIn = useCallback(async (email: string, _password: string) => {
-    const user = authClient.signIn(email);
+  const signIn = useCallback(async (email: string, password: string) => {
+    const user = await authClient.signIn(email, password);
     setUser(user);
   }, []);
 
@@ -26,6 +27,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     authClient.signOut();
     setUser(null);
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    void hydrateDocumentsForUser(user);
+  }, [user]);
 
   return (
     <AuthContext value={{ user, isLoading, signIn, signOut }}>

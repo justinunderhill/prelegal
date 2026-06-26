@@ -14,11 +14,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
-      <header className="sticky top-0 z-30 border-b border-gray-200/70 bg-white/85 shadow-sm backdrop-blur-md">
+    <div className="flex min-h-screen flex-col bg-premium-muted">
+      <header className="sticky top-0 z-30 border-b border-premium-line bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex h-14 items-center justify-between px-4 sm:h-16 sm:max-w-7xl sm:px-6">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-navy to-brand-blue shadow-md shadow-brand-navy/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-navy shadow-sm ring-1 ring-white/10">
               <svg
                 className="h-4.5 w-4.5 text-white"
                 fill="none"
@@ -35,25 +35,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
             <span className="text-lg font-bold tracking-tight text-brand-navy">PreLegal</span>
           </Link>
-          <nav className="flex items-center gap-3 sm:gap-6">
+          <nav className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/agreements"
-              className="text-sm font-medium text-brand-gray transition-colors hover:text-brand-navy"
+              className="rounded-lg px-3 py-2 text-sm font-semibold text-brand-gray transition-colors hover:bg-premium-warm hover:text-brand-navy"
             >
               Templates
             </Link>
             <Link
               href="/documents"
-              className="text-sm font-medium text-brand-gray transition-colors hover:text-brand-navy"
+              className="rounded-lg px-3 py-2 text-sm font-semibold text-brand-gray transition-colors hover:bg-premium-warm hover:text-brand-navy"
             >
               Documents
             </Link>
             {user && (
               <>
-                <span className="hidden text-sm text-brand-gray sm:inline">{user.email}</span>
+                <span className="hidden max-w-48 truncate rounded-lg border border-premium-line bg-white px-3 py-1.5 text-sm text-brand-gray sm:inline">
+                  {user.email}
+                </span>
                 <button
                   onClick={handleSignOut}
-                  className="text-sm font-medium text-brand-gray transition-colors hover:text-brand-navy"
+                  className="rounded-lg px-3 py-2 text-sm font-semibold text-brand-gray transition-colors hover:bg-white hover:text-brand-navy"
                 >
                   Sign Out
                 </button>

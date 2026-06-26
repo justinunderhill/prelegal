@@ -26,10 +26,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-100 via-white to-slate-100 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-premium-muted px-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-navy to-brand-blue shadow-lg shadow-brand-navy/25">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-brand-navy shadow-floating">
             <svg
               className="h-7 w-7 text-white"
               fill="none"
@@ -44,18 +44,18 @@ export default function LoginPage() {
               />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#032147]">PreLegal</h1>
-          <p className="mt-1 text-sm text-[#888888]">
+          <h1 className="text-2xl font-bold tracking-tight text-brand-navy">PreLegal</h1>
+          <p className="mt-1 text-sm text-brand-gray">
             Sign in to create legal agreements
           </p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="rounded-2xl border border-gray-200/70 bg-white p-8 shadow-floating-lg"
+          className="rounded-lg border border-premium-line bg-white p-8 shadow-floating-lg"
         >
           {error && (
-            <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
               {error}
             </div>
           )}
@@ -63,7 +63,7 @@ export default function LoginPage() {
           <div className="mb-4">
             <label
               htmlFor="email"
-              className="mb-1 block text-sm font-medium text-[#032147]"
+              className="mb-1 block text-sm font-semibold text-brand-navy"
             >
               Email
             </label>
@@ -73,14 +73,14 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#209dd7] focus:outline-none focus:ring-1 focus:ring-[#209dd7]"
+              className="w-full rounded-lg border border-premium-line bg-premium-muted px-4 py-2.5 text-sm text-brand-navy placeholder:text-slate-400 transition-colors focus:border-brand-blue focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-blue"
             />
           </div>
 
           <div className="mb-6">
             <label
               htmlFor="password"
-              className="mb-1 block text-sm font-medium text-[#032147]"
+              className="mb-1 block text-sm font-semibold text-brand-navy"
             >
               Password
             </label>
@@ -90,13 +90,13 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#209dd7] focus:outline-none focus:ring-1 focus:ring-[#209dd7]"
+              className="w-full rounded-lg border border-premium-line bg-premium-muted px-4 py-2.5 text-sm text-brand-navy placeholder:text-slate-400 transition-colors focus:border-brand-blue focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-blue"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-gradient-to-br from-brand-purple to-[#5e2d75] px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-purple/25 transition-all hover:shadow-lg hover:shadow-brand-purple/30 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#753991] focus:ring-offset-2 active:scale-[0.99]"
+            className="w-full rounded-lg bg-brand-navy px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-navy/20 transition-all hover:bg-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2 active:scale-[0.99]"
           >
             Sign In
           </button>

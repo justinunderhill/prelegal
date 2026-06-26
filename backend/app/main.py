@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.database import init_db
-from app.routers import chat, health
+from app.routers import auth, chat, documents, health
 
 load_dotenv()
 
@@ -49,6 +49,8 @@ app.add_middleware(
 )
 
 app.include_router(health.router)
+app.include_router(auth.router)
+app.include_router(documents.router)
 app.include_router(chat.router)
 
 if Path(STATIC_DIR).is_dir():

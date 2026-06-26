@@ -93,11 +93,11 @@ export function IntakeChat() {
             : "scale-95 opacity-0 pointer-events-none"
         }`}
       >
-        <div className="flex h-[min(28rem,80vh)] w-[min(22rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl sm:h-[32rem] sm:w-96">
+        <div className="flex h-[min(28rem,80vh)] w-[min(22rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-lg border border-premium-line bg-white shadow-floating-lg sm:h-[32rem] sm:w-96">
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-gray-200 bg-gradient-to-r from-brand-blue/5 to-brand-purple/5 px-4 py-3">
+          <div className="flex items-center justify-between border-b border-premium-line bg-premium-muted px-4 py-3">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-brand-blue to-brand-purple shadow-sm">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-purple shadow-sm">
                 <svg className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456Z" />
                 </svg>
@@ -139,7 +139,7 @@ export function IntakeChat() {
 
             {isLoading && (
               <div className="flex justify-start">
-                <div className="rounded-2xl bg-gray-100 px-3.5 py-2">
+                <div className="rounded-2xl border border-premium-line bg-premium-muted px-3.5 py-2">
                   <div className="flex items-center gap-1.5">
                     <div className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.3s]" />
                     <div className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.15s]" />
@@ -160,23 +160,23 @@ export function IntakeChat() {
 
           {/* Suggested action */}
           {suggestedSlug && (
-            <div className="border-t border-gray-100 bg-green-50 px-4 py-3">
+            <div className="border-t border-premium-line bg-brand-blue/5 px-4 py-3">
               <div className="mb-2">
-                <p className="text-xs font-semibold uppercase tracking-wide text-green-800">
+                <p className="text-xs font-semibold uppercase tracking-wide text-brand-blue">
                   Recommended document
                 </p>
                 <p className="mt-0.5 text-sm font-semibold text-brand-navy">
                   {suggestedConfig?.name ?? "Suggested agreement"}
                 </p>
                 {prefillCount > 0 && (
-                  <p className="mt-1 text-xs text-green-800">
+                  <p className="mt-1 text-xs text-brand-blue">
                     {prefillCount} field{prefillCount === 1 ? "" : "s"} will be prefilled from this conversation.
                   </p>
                 )}
               </div>
               <button
                 onClick={handleStartBuilding}
-                className="w-full rounded-lg bg-brand-purple px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-purple/90"
+                className="w-full rounded-lg bg-brand-navy px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-blue"
               >
                 {prefillCount > 0 ? "Continue with prefilled draft" : "Start building this document"}
               </button>
@@ -184,7 +184,7 @@ export function IntakeChat() {
           )}
 
           {/* Input */}
-          <div className="border-t border-gray-200 px-3 py-2.5">
+          <div className="border-t border-premium-line px-3 py-2.5">
             <div className="flex gap-2">
               <input
                 type="text"
@@ -193,7 +193,7 @@ export function IntakeChat() {
                 onKeyDown={handleKeyDown}
                 placeholder="Describe what you need..."
                 disabled={isLoading}
-                className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm transition-colors focus:border-brand-blue focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-blue disabled:opacity-50"
+                className="flex-1 rounded-lg border border-premium-line bg-premium-muted px-3 py-2 text-sm transition-colors focus:border-brand-blue focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-blue disabled:opacity-50"
               />
               <button
                 onClick={handleSend}
@@ -215,7 +215,7 @@ export function IntakeChat() {
         className={`group relative flex h-14 items-center justify-center gap-2 rounded-full text-white shadow-lg transition-all duration-200 active:scale-95 ${
           isOpen
             ? "w-14 bg-gray-700 hover:bg-gray-800 hover:shadow-xl"
-            : "bg-gradient-to-br from-brand-blue to-brand-purple px-5 shadow-brand-purple/40 hover:scale-105 hover:shadow-xl hover:shadow-brand-purple/50"
+            : "bg-brand-purple px-5 shadow-brand-purple/30 hover:scale-105 hover:shadow-xl hover:shadow-brand-purple/40"
         }`}
         aria-label={isOpen ? "Close AI assistant" : "Open AI assistant"}
       >

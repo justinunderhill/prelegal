@@ -31,9 +31,27 @@ const agreementMeta: Record<string, AgreementMeta> = {
 };
 
 const categoryOrder = ["All", "Commercial", "Privacy", "Technology", "Confidentiality", "AI"];
+const hiddenCategoryFilters = new Set(["Product", "Sales", "Services"]);
 
 function getMeta(config: AgreementConfig): AgreementMeta {
   return agreementMeta[config.slug] ?? { category: "Agreement", estimate: "8 min" };
+}
+
+function matchesSearchQuery(agreement: AgreementConfig, query: string): boolean {
+  const normalizedQuery = query.trim().toLowerCase();
+  if (!normalizedQuery) return true;
+
+  const meta = getMeta(agreement);
+  const searchable = [
+    agreement.name,
+    agreement.description,
+    meta.category,
+    meta.badge ?? "",
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  return searchable.includes(normalizedQuery);
 }
 
 function formatDraftTimestamp(value: string): string {
@@ -50,7 +68,7 @@ function formatDraftTimestamp(value: string): string {
 
 function DraftCard({ draft }: { draft: DraftRecord }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-floating">
+    <div className="rounded-lg border border-premium-line bg-white p-4 shadow-floating">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-brand-navy">
@@ -77,7 +95,7 @@ function DraftCard({ draft }: { draft: DraftRecord }) {
         <button
           type="button"
           onClick={() => removeDraft(draft.slug)}
-          className="text-sm font-semibold text-slate-400 transition-colors hover:text-red-600"
+          className="text-sm font-semibold text-slate-400 transition-colors hover:text-premium-danger"
         >
           Discard
         </button>
@@ -87,37 +105,37 @@ function DraftCard({ draft }: { draft: DraftRecord }) {
 }
 
 export default function AgreementsPage() {
-  const agreements = getAllAgreements();
+  const agreements = useMemo(() => getAllAgreements(), []);
   const drafts = useDrafts();
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
+  const searchMatchedAgreements = useMemo(
+    () => agreements.filter((agreement) => matchesSearchQuery(agreement, query)),
+    [agreements, query]
+  );
+
   const categories = useMemo(() => {
-    const available = new Set(agreements.map((agreement) => getMeta(agreement).category));
+    const available = new Set(
+      searchMatchedAgreements
+        .map((agreement) => getMeta(agreement).category)
+        .filter((category) => !hiddenCategoryFilters.has(category))
+    );
     const ordered = categoryOrder.filter((category) => category === "All" || available.has(category));
     const remaining = Array.from(available)
       .filter((category) => !ordered.includes(category))
       .sort();
     return [...ordered, ...remaining];
-  }, [agreements]);
+  }, [searchMatchedAgreements]);
+
+  const selectedCategory = categories.includes(activeCategory) ? activeCategory : "All";
 
   const filteredAgreements = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
-
-    return agreements.filter((agreement) => {
+    return searchMatchedAgreements.filter((agreement) => {
       const meta = getMeta(agreement);
-      const matchesCategory = activeCategory === "All" || meta.category === activeCategory;
-      const searchable = [
-        agreement.name,
-        agreement.description,
-        meta.category,
-        meta.badge ?? "",
-      ]
-        .join(" ")
-        .toLowerCase();
-      return matchesCategory && (!normalizedQuery || searchable.includes(normalizedQuery));
+      return selectedCategory === "All" || meta.category === selectedCategory;
     });
-  }, [activeCategory, agreements, query]);
+  }, [searchMatchedAgreements, selectedCategory]);
 
   const visibleDrafts = useMemo(() => {
     const agreementSlugs = new Set(agreements.map((agreement) => agreement.slug));
@@ -126,10 +144,10 @@ export default function AgreementsPage() {
 
   return (
     <AppShell>
-      <div className="bg-[linear-gradient(180deg,#f8fafc_0%,#ffffff_48%,#f8fafc_100%)]">
+      <div className="bg-premium-muted">
         <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
           <section className="mb-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
-            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-floating sm:p-7">
+            <div className="rounded-lg border border-premium-line bg-white p-6 shadow-floating sm:p-7">
               <div className="mb-5 flex flex-wrap items-center gap-2">
                 <span className="rounded-full border border-brand-yellow/30 bg-brand-yellow/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-navy">
                   Legal workspace
@@ -146,23 +164,23 @@ export default function AgreementsPage() {
                 and export a polished PDF when the draft is ready.
               </p>
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-lg border border-premium-line bg-premium-muted p-4">
                   <span className="text-2xl font-bold text-brand-navy">{agreements.length}</span>
                   <p className="mt-1 text-sm text-slate-600">agreement templates</p>
                 </div>
-                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-lg border border-premium-line bg-premium-muted p-4">
                   <span className="text-2xl font-bold text-brand-navy">{categories.length - 1}</span>
                   <p className="mt-1 text-sm text-slate-600">practice areas</p>
                 </div>
-                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-lg border border-premium-line bg-premium-muted p-4">
                   <span className="text-2xl font-bold text-brand-navy">Live</span>
                   <p className="mt-1 text-sm text-slate-600">document preview</p>
                 </div>
               </div>
             </div>
 
-            <aside className="rounded-lg border border-brand-navy/10 bg-brand-navy p-6 text-white shadow-floating-lg">
-              <div className="mb-8 flex h-10 w-10 items-center justify-center rounded-lg bg-white/10">
+            <aside className="rounded-lg border border-brand-navy bg-brand-navy p-6 text-white shadow-floating-lg">
+              <div className="mb-8 flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/10">
                 <svg className="h-5 w-5 text-brand-yellow" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456Z" />
                 </svg>
@@ -192,7 +210,7 @@ export default function AgreementsPage() {
                     Continue documents saved in this browser.
                   </p>
                 </div>
-                <span className="hidden rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:inline">
+                <span className="hidden rounded-full border border-premium-line bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:inline">
                   Local autosave
                 </span>
               </div>
@@ -204,7 +222,7 @@ export default function AgreementsPage() {
             </section>
           )}
 
-          <section className="mb-6 rounded-lg border border-slate-200 bg-white p-4 shadow-floating">
+          <section className="mb-6 rounded-lg border border-premium-line bg-white p-4 shadow-floating">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="relative flex-1">
                 <svg
@@ -219,21 +237,24 @@ export default function AgreementsPage() {
                 <input
                   type="search"
                   value={query}
-                  onChange={(event) => setQuery(event.target.value)}
+                  onChange={(event) => {
+                    setQuery(event.target.value);
+                    setActiveCategory("All");
+                  }}
                   placeholder="Search agreements, privacy, licensing, services..."
-                  className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:border-brand-blue focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-blue"
+                  className="w-full rounded-lg border border-premium-line bg-premium-muted py-2.5 pl-10 pr-3 text-sm text-brand-navy placeholder:text-slate-400 transition-colors focus:border-brand-blue focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-blue"
                 />
               </div>
-              <div className="flex gap-2 overflow-x-auto pb-1 lg:pb-0">
+              <div className="flex flex-wrap gap-2">
                 {categories.map((category) => (
                   <button
                     key={category}
                     type="button"
                     onClick={() => setActiveCategory(category)}
                     className={`whitespace-nowrap rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
-                      activeCategory === category
+                      selectedCategory === category
                         ? "border-brand-navy bg-brand-navy text-white"
-                        : "border-slate-200 bg-white text-slate-600 hover:border-brand-blue/40 hover:text-brand-navy"
+                        : "border-premium-line bg-white text-slate-600 hover:border-brand-yellow/50 hover:text-brand-navy"
                     }`}
                   >
                     {category}
